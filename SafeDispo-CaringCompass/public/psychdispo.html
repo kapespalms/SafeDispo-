@@ -1,0 +1,997 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SafeDispo — PsychDispo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap');
+:root{--t:#2640C8;--t2:#1b2f9c;--bg:#f6f6f3;--ink:#16182b;--mut:#6b6f80;--line:#e5e5ec;--card:#fff;--red:#b3261e;--redbg:#fdeceb;--amber:#8a5d00;--amberbg:#fff6e5;--good:#1c7a3f;--goodbg:#e6f4ea;--serif:"Playfair Display",Georgia,"Times New Roman",serif;--sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--sans);background:var(--bg);color:var(--ink);font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+header{background:#fff;border-bottom:1px solid var(--line)}
+.brandbar{max-width:980px;margin:0 auto;display:flex;align-items:center;gap:11px;padding:14px 16px}
+.brandbar .mark{width:27px;height:27px;flex:none}
+.brand{font-family:var(--serif);font-weight:600;font-size:21px;letter-spacing:.3px;color:var(--ink)}
+.brand .b2{color:var(--t)}
+.tagi{font-family:var(--serif);font-style:italic;color:var(--mut);font-size:14px;margin-left:auto}
+.hero{max-width:980px;margin:0 auto;padding:14px 16px 20px}
+.hero .display{font-family:var(--serif);font-weight:600;font-size:42px;line-height:.98;margin:0 0 8px;color:var(--ink);letter-spacing:.5px}
+.hero .display i{font-style:italic;color:var(--t)}
+.hero .kicker{text-transform:uppercase;letter-spacing:.2em;font-size:11px;font-weight:600;color:var(--mut)}
+.hero .sub{font-size:12.5px;color:var(--mut);margin-top:10px;max-width:780px;line-height:1.6}
+h1{font-family:var(--serif)}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px 80px}
+.layer{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:16px 0;padding:18px 20px;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+.layer.hidden{display:none}
+.ltag{font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--t)}
+.ltitle{font-family:var(--serif);font-size:24px;font-weight:600;letter-spacing:.2px;margin:3px 0 2px;line-height:1.1}
+.ldesc{font-size:12.5px;color:var(--mut);margin-bottom:14px}
+.q{margin:14px 0}
+.q>label.qlabel{display:block;font-weight:600;font-size:14px;margin-bottom:7px}
+.opts{display:flex;gap:8px;flex-wrap:wrap}
+.opt{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 13px;font-size:13.5px;cursor:pointer;user-select:none;white-space:nowrap}
+.opt:hover{border-color:var(--t)}
+.opt.sel{background:var(--t);color:#fff;border-color:var(--t)}
+.opt.sel.danger{background:var(--red);border-color:var(--red)}
+.opt.sel.warn{background:var(--amber);border-color:var(--amber)}
+input[type=text],input[type=number],select,textarea{font-family:inherit;font-size:14px;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);width:100%;max-width:340px}
+textarea{max-width:100%;min-height:54px;resize:vertical}
+.inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.sub2{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--mut);margin:16px 0 7px;border-top:1px solid var(--line);padding-top:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:680px){.grid2{grid-template-columns:1fr}}
+.note{font-size:12.5px;color:var(--mut)}
+.alert{border-radius:10px;padding:11px 14px;font-size:13px;margin:10px 0}
+.alert.red{background:var(--redbg);border:1px solid #f3c9c6;border-left:4px solid var(--red);color:#7a1a14}
+.alert.amber{background:var(--amberbg);border:1px solid #f0dca6;border-left:4px solid var(--amber);color:#6b4b00}
+.alert.good{background:var(--goodbg);border:1px solid #b6e0c4;border-left:4px solid var(--good);color:#15602f}
+.reveal{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.reveal.hidden{display:none}
+.req{color:var(--red);font-weight:700;font-size:11px;border:1px solid #f3c9c6;background:var(--redbg);border-radius:6px;padding:1px 6px;margin-left:6px}
+/* resource panels */
+.panel{border:1px solid var(--line);border-radius:11px;margin:12px 0;overflow:hidden}
+.panel>.ph{background:#f3f7f6;padding:10px 14px;font-weight:700;font-size:13.5px;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+.panel .pbody{padding:6px 12px 12px}
+.subhdr{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--t2);margin:12px 0 5px}
+.res{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:9px;padding:9px 11px;margin:6px 0;background:#fff}
+.res input[type=checkbox]{margin-top:3px;width:17px;height:17px;flex:none}
+.res .rn{font-weight:600;font-size:13.5px}
+.res .rs{font-size:12px;color:var(--ink);opacity:.8}
+.res .rax{font-size:11px;color:var(--t2);font-weight:600}
+.res .rad{font-size:11.5px;color:var(--mut)}
+.res a.rp{font-size:13.5px;font-weight:700;color:var(--t2);text-decoration:none}
+.res .badge{font-size:9.5px;border-radius:999px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+.badge.v{background:var(--goodbg);color:var(--good);border:1px solid #b6e0c4}
+.badge.nat{background:#eef0ff;color:#3a3a8a;border:1px solid #ccd0f5}
+.mini label{display:flex;align-items:center;gap:8px;font-size:13.5px;padding:5px 0;cursor:pointer}
+.mini input{width:17px;height:17px}
+/* status bar */
+.statusbar{position:sticky;bottom:0;z-index:20;background:#fff;border-top:1px solid var(--line);box-shadow:0 -2px 8px rgba(0,0,0,.06);padding:10px 16px}
+.statusbar .inner{max-width:980px;margin:0 auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.chk{font-size:12px;color:var(--mut);display:flex;align-items:center;gap:4px}
+.chk.ok{color:var(--good)}.chk b{font-size:13px}
+.btn{margin-left:auto;background:var(--t);color:#fff;border:none;border-radius:10px;padding:11px 18px;font-size:14px;font-weight:700;cursor:pointer}
+.btn:disabled{background:#aebdbb;cursor:not-allowed}
+.btn.sec{background:#fff;color:var(--t);border:1px solid var(--t);margin-left:0}
+/* packet */
+#packet{display:none}
+#packet.show{display:block}
+.pk{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;margin:16px 0}
+.pk h2{margin:0 0 2px;font-size:24px;font-family:var(--serif);font-weight:600}
+.pk .pkmeta{font-size:12px;color:var(--mut);margin-bottom:8px}
+.pk h3{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--t);border-bottom:2px solid var(--line);padding-bottom:5px;margin:18px 0 8px}
+.pk .er3{color:var(--red);border-bottom-color:#f3c9c6}
+.pk table{width:100%;border-collapse:collapse;font-size:13px}
+.pk td{padding:6px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+.pk td:first-child{font-weight:600;width:46%}
+.pk a{color:var(--t2);text-decoration:none;font-weight:700}
+.pk ul{margin:4px 0;padding-left:20px}.pk li{margin:3px 0;font-size:13px}
+.pk .sp td:first-child{width:32%;color:var(--t2)}
+.blank{display:inline-block;min-width:160px;border-bottom:1px solid #9aa;height:1.05em}
+.refblock{border:1px solid var(--line);border-radius:9px;padding:8px 11px;margin:7px 0}
+.refblock .rn{font-weight:700}.refblock .meta{font-size:12px;color:var(--mut)}
+.strength{margin-top:12px;font-weight:600;color:var(--t2);background:var(--goodbg);border-radius:9px;padding:11px 14px;text-align:center}
+.lines div{border-bottom:1px solid #cdd6d5;height:1.7em}
+body.embed header,body.embed .hero,body.embed .tabbar{display:none!important}
+.tabbar{background:var(--t2);position:sticky;top:0;z-index:30}
+.tabs{display:flex;gap:2px;max-width:980px;margin:0 auto;padding:0 8px}
+.tab{padding:12px 20px;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#fff;opacity:.72;cursor:pointer;border:none;background:transparent;border-bottom:3px solid transparent;font-family:inherit}
+.tab:hover{opacity:.92}.tab.on{opacity:1;border-bottom-color:#fff}
+.hidden{display:none}
+.reftier{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--t);margin:20px 0 8px;border-bottom:2px solid var(--line);padding-bottom:5px}
+details.ref{border:1px solid var(--line);border-radius:9px;margin:7px 0;background:#fff;overflow:hidden}
+details.ref>summary{padding:11px 14px;font-weight:600;font-size:14px;cursor:pointer;list-style:none}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{content:"\25B8  ";color:var(--t)}
+details.ref[open]>summary::before{content:"\25BE  "}
+details.ref[open]>summary{border-bottom:1px solid var(--line);background:#f3f7f6}
+.refbody{padding:12px 16px;font-size:13px;line-height:1.5}
+.refbody p{margin:6px 0}.refbody ul{margin:4px 0 8px;padding-left:18px}.refbody li{margin:3px 0}
+.refbody .h{font-weight:700;color:var(--ink);margin:13px 0 2px;font-size:12.5px}
+.refbody .lead{color:var(--mut);margin:0 0 8px}
+.refbody .dispo{background:#eef1fb;border-left:3px solid var(--t);padding:9px 12px;border-radius:6px;margin-top:10px}
+.refbody .dispo ul{margin:4px 0 0}.refbody .dispo>b{color:var(--t2)}
+.refbody sup a{color:var(--t2);text-decoration:none;font-weight:700}
+.refbody a{color:var(--t2)}
+.refs ol{padding-left:20px;font-size:12px}.refs li{margin:3px 0}
+@media print{
+ header,.hero,.statusbar,.layer,.note,.toolnote,.tabbar{display:none!important}
+ body{background:#fff}#packet.show{display:block}.pk{border:none;padding:0;margin:0}
+ .wrap{padding:0;max-width:none}
+}
+</style></head>
+<body>
+<header><div class="brandbar">
+<svg class="mark" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 3.5 3.6 12.7V28a2 2 0 0 0 2 2h20.8a2 2 0 0 0 2-2V12.7L16 3.5Z" fill="#2640C8"/><path d="M16 15.3v7.4M12.3 19h7.4" stroke="#fff" stroke-width="2.3" stroke-linecap="round"/></svg>
+<span class="brand">Safe<span class="b2">Dispo</span></span>
+<span class="tagi">Inspiring safer disposition</span>
+</div></header>
+<div class="hero">
+<div class="display" id="heroTitle">Psych<i>Dispo</i></div>
+<div class="kicker" id="heroKicker">Psychiatric disposition &amp; discharge · Columbus + Cleveland</div>
+<p class="sub">Resources are individually verified (✓) or curated national/statewide lines. For medically-cleared patients. Not a substitute for clinical judgment.</p>
+</div>
+<div class="tabbar"><div class="tabs"><button class="tab on" data-view="tool">PsychDispo · Plan</button><button class="tab" data-view="ref">PsychRef · Review</button></div></div>
+<div class="wrap">
+<div id="view-tool">
+
+<!-- LAYER 0 -->
+<section class="layer" id="L0">
+ <div class="ltag">Entry gate</div>
+ <div class="q"><label class="qlabel">Q1. Medically cleared?</label>
+  <div class="opts" data-field="cleared"><div class="opt" data-val="yes">Yes</div><div class="opt" data-val="no">No</div></div>
+  <div class="reveal hidden alert red" id="notCleared">Not medically cleared — complete medical workup / stabilization before psychiatric disposition. This tool is for medically-cleared patients only.</div>
+ </div>
+ <div class="q"><label class="qlabel">Q2. Discharge setting?</label>
+  <div class="opts" data-field="setting">
+   <div class="opt" data-val="ED">Emergency Department</div>
+   <div class="opt" data-val="InptPsych">Inpatient Psychiatry</div>
+   <div class="opt" data-val="InptMed">Inpatient Medicine / Surgery</div>
+   <div class="opt" data-val="Urgent">Urgent Care / Crisis Stabilization</div>
+  </div></div>
+ <div class="q"><label class="qlabel">Q3. Patient ZIP code</label>
+  <input type="text" id="zip" inputmode="numeric" maxlength="5" placeholder="e.g. 43210" style="max-width:140px">
+  <span class="note" id="zipMeta"></span></div>
+ <div class="q"><label class="qlabel">Q4. Insurance</label>
+  <div class="opts" data-field="insurance">
+   <div class="opt" data-val="Medicaid">Medicaid</div><div class="opt" data-val="Medicare">Medicare</div>
+   <div class="opt" data-val="Commercial">Commercial</div><div class="opt" data-val="VA">VA / Tricare</div>
+   <div class="opt" data-val="Uninsured">Uninsured</div>
+  </div></div>
+</section>
+
+<!-- LAYER 1 -->
+<section class="layer hidden" id="L1">
+ <div class="ltag">Who is the patient?</div>
+ <div class="ltitle">Demographics &amp; population flags</div>
+ <div class="sub2">1A · Demographics</div>
+ <div class="grid2">
+  <div><label class="qlabel">Preferred language</label>
+   <select id="lang"><option value="English">English</option><option value="Spanish">Spanish</option><option value="Somali">Somali</option><option value="Arabic">Arabic</option><option value="Nepali">Nepali</option><option value="French">French</option><option value="ASL">ASL</option><option value="Other">Other</option></select></div>
+ </div>
+ <div class="q"><label class="qlabel">Sex assigned at birth</label>
+  <div class="opts" data-field="sab"><div class="opt" data-val="M">Male</div><div class="opt" data-val="F">Female</div><div class="opt" data-val="Intersex">Intersex</div></div></div>
+ <div class="grid2">
+  <div><label class="qlabel">Gender identity</label>
+   <select id="gender"><option value="">—</option><option>Man</option><option>Woman</option><option>Transgender man</option><option>Transgender woman</option><option>Nonbinary</option><option>Prefer to self-describe</option></select></div>
+  <div><label class="qlabel">Interpreter needed?</label>
+   <div class="opts" data-field="interpreter"><div class="opt" data-val="yes">Yes</div><div class="opt" data-val="no">No</div></div></div>
+ </div>
+ <div class="sub2">1B · Population flags</div>
+ <div class="q"><label class="qlabel">Life stage <span class="req">select one</span></label>
+  <div class="opts" data-field="lifeStage"><div class="opt" data-val="child">Child / Adolescent (&lt;18)</div><div class="opt" data-val="adult">Adult (18–64)</div><div class="opt" data-val="geriatric">Geriatric (≥65)</div></div></div>
+ <div class="multi" data-multi="1">
+  <div class="sub2" style="border:none;padding-top:6px">Reproductive · Military · Identity</div>
+  <div class="opts">
+   <div class="opt" data-flag="perinatal">Perinatal (pregnant or ≤12 mo postpartum)</div>
+   <div class="opt" data-flag="veteran">Veteran / Active Duty / Military Family</div>
+   <div class="opt" data-flag="lgbtq">LGBTQ+</div>
+  </div>
+  <div class="sub2" style="border:none">Medical comorbidity (all that apply)</div>
+  <div class="opts">
+   <div class="opt" data-flag="sud">Substance Use Disorder</div>
+   <div class="opt" data-flag="tbi">TBI / Neuropsychiatric</div>
+   <div class="opt" data-flag="idd">Intellectual / Developmental Disability</div>
+   <div class="opt" data-flag="seriousMed">Serious Medical Illness</div>
+  </div>
+  <div class="sub2" style="border:none">Social / legal</div>
+  <div class="opts">
+   <div class="opt" data-flag="justice">Justice-Involved</div>
+   <div class="opt" data-flag="unhoused">Unhoused / Housing Unstable</div>
+  </div>
+ </div>
+</section>
+
+<!-- LAYER 2 -->
+<section class="layer hidden" id="L2">
+ <div class="ltag">Safety screening — required</div>
+ <div class="sub2">2A · Suicide risk</div>
+ <div class="q"><label class="qlabel">C-SSRS completed?</label>
+  <div class="opts" data-field="cssrsDone"><div class="opt" data-val="yes">Yes</div><div class="opt" data-val="no">No</div></div>
+  <div class="reveal hidden" id="cssrsRisk"><label class="qlabel">Risk level</label>
+   <div class="opts" data-field="suicideRisk"><div class="opt" data-val="low">Low</div><div class="opt warnv" data-val="moderate">Moderate</div><div class="opt dangerv" data-val="high">High</div></div>
+   <div class="reveal hidden alert red" id="hiRiskMsg">Moderate/High risk — Safety Plan (4A) and Lethal Means Counseling (4B) are now <b>required</b>, and crisis services are auto-pinned to the packet.</div>
+  </div></div>
+ <div class="sub2">2B · Substance use</div>
+ <div class="q"><label class="qlabel">Substance use screen completed?</label>
+  <div class="opts" data-field="sudScreenDone"><div class="opt" data-val="yes">Yes</div><div class="opt" data-val="no">No</div></div>
+  <div class="reveal hidden" id="sudTools">
+   <label class="qlabel">Tool used</label>
+   <div class="opts" data-field="sudTool"><div class="opt" data-val="auditc">AUDIT-C</div><div class="opt" data-val="dast10">DAST-10</div><div class="opt" data-val="taps">TAPS</div><div class="opt" data-val="clinical">Clinical interview only</div></div>
+   <div class="reveal hidden" id="sudScoreWrap"><label class="qlabel">Score <span class="note" id="sudPosHint"></span></label><input type="number" id="sudScore" style="max-width:110px" placeholder="score"></div>
+   <div class="reveal hidden alert amber" id="sudPosMsg">Positive screen — Substance Use Treatment panel (Panel C) unlocked in Layer 5.</div>
+  </div></div>
+ <div class="sub2">2C · Violence / homicide risk</div>
+ <div class="q"><label class="qlabel">Acute violence risk identified?</label>
+  <div class="opts" data-field="violence"><div class="opt" data-val="yes">Yes</div><div class="opt" data-val="no">No</div></div>
+  <div class="reveal hidden alert red" id="violenceMsg"><b>Duty to warn / Tarasoff:</b> document identifiable victim, notification, and protective action. Forensic / safety referral options added to Panel G.</div>
+ </div>
+</section>
+
+<!-- LAYER 3 -->
+<section class="layer hidden" id="L3">
+ <div class="ltag">Level of care</div>
+ <div class="ltitle">Disposition decision (select one)</div>
+ <div class="q"><div class="opts" data-field="dispo">
+   <div class="opt" data-val="community">Community discharge</div>
+   <div class="opt" data-val="residential">Supervised residential (non-hospital 24-hr)</div>
+ </div></div>
+ <div class="reveal hidden" id="intensityWrap"><label class="qlabel">Intensity</label>
+  <div class="opts" data-field="intensity">
+   <div class="opt" data-val="outpatient">Outpatient only (weekly or less)</div>
+   <div class="opt" data-val="iop">IOP (9–19 hrs/wk)</div>
+   <div class="opt" data-val="php">PHP (≥20 hrs/wk)</div>
+  </div></div>
+ <div class="reveal hidden" id="residWrap"><label class="qlabel">Residential type</label>
+  <div class="opts" data-field="residType">
+   <div class="opt" data-val="psychres">Psychiatric residential</div>
+   <div class="opt" data-val="sudres">SUD residential / sober living</div>
+   <div class="opt" data-val="grouphome">Group home / supported living</div>
+   <div class="opt" data-val="snf">Skilled nursing / long-term care</div>
+  </div></div>
+</section>
+
+<!-- LAYER 4 -->
+<section class="layer hidden" id="L4">
+ <div class="ltag">Layer 4 · Universal safety interventions</div>
+ <div class="ltitle">Completed before discharge — not referrals</div>
+ <div class="sub2">4A · Safety plan (Stanley-Brown)</div>
+ <div class="q"><label class="qlabel">Safety plan completed?</label><div class="opts" data-field="planDone"><div class="opt" data-val="yes">Yes</div><div class="opt" data-val="no">No</div></div></div>
+ <div class="sub2">4B · Lethal means counseling</div>
+ <div class="q"><label class="qlabel">Firearms access?</label>
+  <div class="opts" data-field="firearm"><div class="opt" data-val="yes">Yes</div><div class="opt" data-val="no">No</div></div>
+  <div class="reveal hidden" id="firearmPlanWrap"><label class="qlabel">Action taken</label>
+   <div class="mini">
+    <label><input type="checkbox" data-store="firearmPlan.safe"> Firearm / trigger locked within a safe</label>
+    <label><input type="checkbox" data-store="firearmPlan.noaccess"> Patient unable to access</label>
+    <label><input type="checkbox" data-store="firearmPlan.removed"> Removed from home via collateral assistance</label>
+    <label><input type="checkbox" data-store="firearmPlan.other"> Other</label>
+   </div>
+   <input type="text" data-text="firearmOther" placeholder="Other — describe"></div></div>
+ <div class="q"><label class="qlabel">Medication stockpile?</label>
+  <div class="opts" data-field="meds"><div class="opt" data-val="yes">Yes</div><div class="opt" data-val="no">No</div></div>
+  <div class="reveal hidden" id="medsPlanWrap"><label class="qlabel">Action taken</label>
+   <div class="mini">
+    <label><input type="checkbox" data-store="medsPlan.safe"> Medications locked within a safe</label>
+    <label><input type="checkbox" data-store="medsPlan.noaccess"> Patient unable to access</label>
+    <label><input type="checkbox" data-store="medsPlan.removed"> Removed from home via collateral assistance</label>
+    <label><input type="checkbox" data-store="medsPlan.other"> Other</label>
+   </div>
+   <input type="text" data-text="medsOther" placeholder="Other — describe"></div></div>
+ <div class="q"><label class="qlabel">Other means discussed</label>
+  <div class="mini">
+   <label><input type="checkbox" data-store="otherMeans.caustic"> Removal of caustic liquids</label>
+   <label><input type="checkbox" data-store="otherMeans.other"> Other</label>
+  </div>
+  <input type="text" data-text="otherMeansOther" placeholder="Other — describe"></div>
+ <div class="sub2">4C · Follow-up appointment</div>
+ <div class="q"><label class="qlabel">Appointment scheduled before discharge?</label>
+  <div class="opts" data-field="apptScheduled"><div class="opt" data-val="yes">Yes</div><div class="opt" data-val="no">No</div></div></div>
+ <div class="reveal hidden" id="apptYesWrap"><div class="grid2">
+  <div><label class="qlabel">Provider</label><input type="text" data-plan2="fuProvider"></div>
+  <div><label class="qlabel">Date</label><input type="text" data-plan2="fuDate" placeholder="MM/DD/YYYY"></div>
+  <div><label class="qlabel">Time</label><input type="text" data-plan2="fuTime"></div>
+  <div><label class="qlabel">Warm handoff completed?</label><div class="opts" data-field="warm"><div class="opt" data-val="yes">Yes</div><div class="opt" data-val="no">No</div></div></div>
+ </div></div>
+ <div class="reveal hidden" id="apptNoWrap"><label class="qlabel">Contact method for referral</label>
+  <div class="opts"><div class="opt" data-mc="phone">Telephone call</div><div class="opt" data-mc="email">Email intake</div></div></div>
+ <div class="q"><label class="qlabel">Post-discharge phone contact plan</label>
+  <div class="opts" data-field="callback"><div class="opt" data-val="24h">24-hour callback</div><div class="opt" data-val="72h">72-hour callback</div><div class="opt" data-val="weekly">Weekly until engaged</div></div></div>
+ <div class="grid2">
+  <div><label class="qlabel">PCP notified?</label><div class="opts" data-field="pcp"><div class="opt" data-val="yes">Yes</div><div class="opt" data-val="no">No</div><div class="opt" data-val="nopcp">No PCP</div></div></div>
+  <div><label class="qlabel">Pharmacy confirmed?</label><div class="opts" data-field="pharmacy"><div class="opt" data-val="yes">Yes</div><div class="opt" data-val="na">N/A</div></div></div>
+ </div>
+</section>
+
+<!-- LAYER 5 -->
+<section class="layer hidden" id="L5">
+ <div class="ltag">Referrals</div>
+ <div class="ldesc" id="l5ctx"></div>
+ <div id="panels"></div>
+</section>
+
+<!-- LAYER 6 -->
+<section class="layer hidden" id="L6">
+ <div class="ltag">Discharge packet</div>
+ <div class="ltitle">Generate &amp; print</div>
+ <div class="ldesc">Unlocks when safety screening (L2), safety interventions (L4) and at least one referral are complete.</div>
+ <div id="l6status"></div>
+ <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+  <button class="btn sec" id="genBtn">Build packet preview</button>
+  <button class="btn" id="printBtn" disabled style="margin-left:0">Print / Save PDF</button>
+ </div>
+</section>
+
+<section id="packet"></section>
+<div class="toolnote note" style="margin:10px 0 0">Always call to confirm hours, eligibility &amp; insurance. ✓ = individually verified online (Jun 2026); national lines are well-established hotlines. In a life-threatening emergency call 911.</div>
+</div>
+<div id="view-ref" class="hidden"><section class="layer" id="reference">
+<div class="ltag">Clinical reference — evidence-based</div>
+<div class="ltitle">The safety gate &amp; level-of-care knowledge base</div>
+<div class="ldesc">Every disposition passes through these topics. Reference only — does not replace clinical judgment or state-specific law. Tap a row to expand.</div>
+
+<div class="reftier">Tier 1 · The safety gate</div>
+
+<details class="ref"><summary>1A · Suicide risk assessment</summary><div class="refbody">
+<p class="lead"><b>Purpose:</b> identify patients at risk to set level of care and required safety interventions before discharge.</p>
+<p class="h"><b>C-SSRS Screener</b> — severity 0–5 + behaviors<sup><a href="https://www.healthquality.va.gov/guidelines/MH/srb/VADOD-CPG-Suicide-Risk-Full-CPG-2024_Final_508.pdf" target="_blank">1</a>,<a href="https://pubmed.ncbi.nlm.nih.gov/22193671" target="_blank">5</a></sup></p>
+<ul>
+<li>6 core questions: wished dead · thoughts of killing self · thought how · some intent to act · plan + intent · ever done/started/prepared anything (→ if yes, within 3 months?)</li>
+<li><b>LOW:</b> Yes to Q1/Q2 only; Q3–Q6 all No</li>
+<li><b>MODERATE:</b> Yes to Q3 (how) OR behavior (Q6) &gt;3 months ago</li>
+<li><b>HIGH:</b> Yes to Q4 (intent) and/or Q5 (plan + intent), OR behavior within 3 months</li>
+<li>Positive screen → +LR &gt;10 for suicide death at 3 mo; in ED, +LR &gt;10 for attempt within 30 days. 2024 VA/DoD: may be the most useful universal-screening tool</li>
+</ul>
+<p class="h"><b>PHQ-9 Item 9</b> — "better off dead / hurting yourself"</p>
+<ul>
+<li>Any response other than "Not at all" predicts suicide & attempt</li>
+<li>~5% of primary-care depression patients report SI most/nearly every day → ~1% self-harm/attempt over 90 days<sup><a href="https://jamanetwork.com/journals/jama/fullarticle/10.1001/jama.2024.5756" target="_blank">8</a></sup></li>
+<li>Item 9 alone (vs full PHQ-9) not separately validated</li>
+</ul>
+<p class="h"><b>ASQ</b> — 4-item peds + adult ED screen<sup><a href="https://digitalassets.jointcommission.org/api/public/content/459bbe2be1ab4e5082b8a8d49d0c94e0?v=69255bb9" target="_blank">4</a></sup></p>
+<ul>
+<li>Wished dead · family better off if dead · thoughts of killing self · ever tried</li>
+<li>Any Yes → positive → full assessment; if all No → "thoughts right now?" (acuity). Joint Commission-recommended</li>
+</ul>
+<p class="h"><b>Stanley-Brown Safety Planning</b> — 6 steps before discharge<sup><a href="https://jamanetwork.com/journals/jamapsychiatry/fullarticle/10.1001/jamapsychiatry.2020.1586" target="_blank">11</a></sup></p>
+<ul>
+<li>(1) warning signs · (2) internal coping · (3) people/settings for distraction · (4) people to ask for help · (5) professionals/agencies · (6) make environment safe (lethal means)</li>
+<li>Reduces suicidal behaviors <b>45–76%</b> vs usual care; meta-analysis of 14 studies → fewer attempts + better follow-up</li>
+<li>Superior to no-suicide contracts (no evidence; not recommended)</li>
+</ul>
+<p class="h"><b>Lethal means counseling</b> (Step 6)</p>
+<ul>
+<li>Assess firearms, medication stockpiles, sharps, other means</li>
+<li>Firearms → off-site storage with trusted person, gun lock, safe</li>
+<li>Medications → limit supply, trusted person holds. Recommended by VA/DoD, AAP, Joint Commission</li>
+</ul>
+<div class="dispo"><b>Disposition logic</b>
+<ul>
+<li><b>LOW</b> → community + safety plan + crisis resources + follow-up within 7 days</li>
+<li><b>MODERATE</b> → consider PHP/IOP; follow-up 48–72 h; safety plan + lethal means required</li>
+<li><b>HIGH</b> → inpatient (voluntary/involuntary), or crisis stabilization if no bed</li>
+</ul></div>
+</div></details>
+
+<details class="ref"><summary>1B · Violence / homicide risk</summary><div class="refbody">
+<p class="lead"><b>Purpose:</b> identify acute risk to others; determine duty-to-warn and disposition. No single tool reliably predicts ED violence.</p>
+<p class="h"><b>Structured tools</b> (forensic/inpatient)</p>
+<ul>
+<li><b>HCR-20</b> — 20-item historical/clinical/risk-management</li>
+<li><b>STAMP</b> — Staring, Tone, Anxiety, Mumbling, Pacing</li>
+<li><b>Brøset</b> — confusion, irritability, boisterousness, verbal threats, physical threats, attacks on objects</li>
+</ul>
+<p class="h"><b>Key risk factors</b></p>
+<ul>
+<li>History of violence (strongest predictor)</li>
+<li>Active psychosis with command hallucinations / persecutory delusions</li>
+<li>Intoxication (stimulants, PCP, alcohol); weapon access; specific identified victim; treatment non-adherence</li>
+</ul>
+<p class="h"><b>Tarasoff / duty to warn</b><sup><a href="https://www.psychiatry.org/getattachment/4046d4aa-a3b4-4464-9cd4-5317eb0c372b/Resource-Document-2019-Decisional-Capacity-Determinations-in-Consultation-Liaison-Psychiatry.pdf" target="_blank">12</a></sup></p>
+<ul>
+<li>Obligation (varies by state) to warn identifiable victims of a credible threat</li>
+<li>Document: specific threat, identified victim, actions taken (victim + law-enforcement notification)</li>
+</ul>
+<div class="dispo"><b>Disposition logic</b>
+<ul>
+<li>No acute risk → standard</li>
+<li>Elevated, no specific threat → enhanced safety planning, consider higher LOC, document</li>
+<li>Specific threat + identifiable victim → duty to warn/protect, consider involuntary hold, notify law enforcement per state law</li>
+</ul></div>
+</div></details>
+
+<details class="ref"><summary>1C · Agitation management</summary><div class="refbody">
+<p class="h"><b>De-escalation</b> (first-line, always before meds)<sup><a href="https://linkinghub.elsevier.com/retrieve/pii/S0196-0644(17)30070-7" target="_blank">13</a></sup></p>
+<ul>
+<li>Calm voice, short sentences; offer choices (food/drink/seating)</li>
+<li>Address unmet needs; clear respectful limits; safe distance; remove audience/stimulation; low-stimulation room</li>
+</ul>
+<p class="h"><b>Pharmacologic — IM (cannot take PO)</b><sup><a href="https://pubmed.ncbi.nlm.nih.gov/41355751" target="_blank">15</a>,<a href="https://pubmed.ncbi.nlm.nih.gov/29885904" target="_blank">16</a></sup></p>
+<ul>
+<li><b>Droperidol</b> 5–10 mg — most rapid; recent first-line</li>
+<li><b>Olanzapine</b> 10 mg — <b>do NOT combine with IM benzo</b></li>
+<li><b>Midazolam</b> 5 mg — fastest sedation at 15 min; preferred for stimulant intox / alcohol withdrawal</li>
+<li><b>Haloperidol</b> 5–10 mg ± diphenhydramine 50 mg — slower onset</li>
+</ul>
+<p class="h"><b>Rescue / extreme</b></p>
+<ul><li><b>Ketamine</b> 4–5 mg/kg IM when other agents fail; continuous monitoring (pulse ox, ETCO2) after</li></ul>
+<p class="h"><b>Oral (cooperative)</b></p>
+<ul><li>Olanzapine 5–10 mg ODT; or risperidone 2 mg + lorazepam 2 mg PO</li></ul>
+<p class="h"><b>Monitoring &amp; safety</b></p>
+<ul>
+<li>Continuous pulse ox (no supplemental O2), VS q15 min until responsive, ETCO2 when available; watch respiratory depression, hypotension, EPS/dystonia, oversedation</li>
+<li>Do NOT combine IM olanzapine + IM benzo; avoid routine antipsychotic+benzo combo</li>
+<li>Benzos → alcohol/benzo withdrawal & stimulant intox; antipsychotics → known psychosis / undifferentiated agitation</li>
+</ul>
+</div></details>
+
+<details class="ref"><summary>1D · Medical clearance (medical screening exam)</summary><div class="refbody">
+<p class="h"><b>AAEP minimum for ALL psychiatric patients</b><sup><a href="https://pubmed.ncbi.nlm.nih.gov/28210358" target="_blank">17</a>,<a href="https://pubmed.ncbi.nlm.nih.gov/28611885" target="_blank">18</a></sup></p>
+<ul>
+<li>Prefer "medical screening exam" over "medical clearance"</li>
+<li>Thorough history (substances, meds, medical) · physical exam · vital signs incl. temperature · mental status exam</li>
+</ul>
+<p class="h"><b>Labs</b> — not routine if alert/cooperative, normal vitals, noncontributory history, normal exam<sup><a href="https://pubmed.ncbi.nlm.nih.gov/37492063" target="_blank">19</a></sup></p>
+<ul>
+<li>Fingerstick glucose (AMS/diabetes) · urine pregnancy (childbearing age) · BAL (suspected intox)</li>
+<li>UDS (rarely changes acute mgmt) · CMP (metabolic/renal) · CBC (infection) · TSH (new-onset)</li>
+<li><b>CK</b> — agitation/stimulants/restraint (most common cause of medical intervention in one study) · drug levels (Li/VPA/CBZ)</li>
+</ul>
+<p class="h"><b>Screening tools</b><sup><a href="https://pubmed.ncbi.nlm.nih.gov/40652914" target="_blank">21</a></sup></p>
+<ul><li>SMART Checklist — sensitivity 83.3%, NPV 99.1% · TAPS sens 66.6% · Shah's spec 76.9% (all need validation)</li></ul>
+<p class="h"><b>Red flags → full workup first</b></p>
+<ul><li>Abnormal vitals · altered consciousness/delirium · new-onset psych symptoms age &gt;40 without history · focal deficits · head trauma · significant comorbidities · first-episode psychosis</li></ul>
+<div class="dispo"><b>Disposition logic:</b> medical condition → stabilize on medical service first; normal/cooperative → proceed to psych; borderline → document reasoning.</div>
+</div></details>
+
+<details class="ref"><summary>1E · Capacity evaluation</summary><div class="refbody">
+<p class="h"><b>Appelbaum 4 components</b><sup><a href="https://www.psychiatry.org/getattachment/4046d4aa-a3b4-4464-9cd4-5317eb0c372b/Resource-Document-2019-Decisional-Capacity-Determinations-in-Consultation-Liaison-Psychiatry.pdf" target="_blank">12</a></sup></p>
+<ul><li>(1) Understanding · (2) Appreciation (applies to them) · (3) Reasoning (weigh risks/benefits) · (4) Communication of a consistent choice</li></ul>
+<p class="h"><b>Principles</b></p>
+<ul>
+<li>Decision- and time-specific; ≠ competency (a court determination); can fluctuate (reassess)</li>
+<li>Disagreeing with advice ≠ lacking capacity; psychiatric illness ≠ automatic incapacity</li>
+<li>Neurocognitive disorders are the most common cause of impairment</li>
+</ul>
+<p class="h"><b>Process</b></p>
+<ul>
+<li>Identify the concern (consent vs refusal vs AMA vs dispositional)</li>
+<li>Psychiatric interview + cognitive assessment; patient describes treatment/risks/benefits/alternatives/consequences in own words; assess each component; consider MacCAT-T</li>
+<li>Document the specific decision, diagnosis, each component, reversibility, recommendation</li>
+</ul>
+<div class="dispo"><b>Disposition logic:</b> has capacity → patient decides (incl. AMA); lacks capacity → surrogate, consider guardianship, involuntary hold if safety concern.</div>
+</div></details>
+
+<details class="ref"><summary>1F · Involuntary commitment</summary><div class="refbody">
+<p class="h"><b>Criteria (vary by state) — typically require ALL</b></p>
+<ul><li>Mental illness (intoxication alone may not qualify) · imminent danger to self/others OR gravely disabled · less-restrictive alternatives insufficient</li></ul>
+<p class="h"><b>Hold types</b></p>
+<ul><li>Emergency hold (e.g., 72-h, physician-initiated) · judicial commitment (court-ordered, longer) · outpatient commitment / AOT</li></ul>
+<p class="h"><b>Document &amp; rights</b></p>
+<ul>
+<li>Specific behaviors/statements showing danger; diagnosis; why less-restrictive insufficient; signature + time</li>
+<li>Patients retain rights (attorney, hearing, refuse some treatments); state law governs duration, who initiates, "gravely disabled," intoxication holds</li>
+</ul>
+</div></details>
+
+<div class="reftier">Tier 2 · Level-of-care determination</div>
+
+<details class="ref"><summary>2A · LOCUS (psychiatric level of care)</summary><div class="refbody">
+<p class="h"><b>Six dimensions</b> (each 1–5)<sup><a href="https://pubmed.ncbi.nlm.nih.gov/10863991" target="_blank">22</a></sup></p>
+<ul><li>Risk of harm · functional status · medical/addictive/psychiatric comorbidity · recovery environment (stress) · treatment & recovery history · engagement & recovery status</li></ul>
+<p class="h"><b>Six levels</b></p>
+<ul>
+<li>1 Recovery maintenance (&lt;1 visit/mo) · 2 Low-intensity community (weekly/biweekly) · 3 High-intensity community (IOP/ACT/day tx)</li>
+<li>4 Medically monitored non-residential (PHP) · 5 Medically monitored residential (residential/crisis stabilization) · 6 Medically managed residential (inpatient)</li>
+</ul>
+<p class="h"><b>Scoring</b> (total 6–30, approx)</p>
+<ul><li>6–11→L1 · 12–15→L2 · 16–19→L3 · 20–22→L4 · 23–25→L5 · 26–30→L6</li>
+<li>Any single dimension = 5 may warrant L5/L6 regardless of total. Joint Commission-recognized</li></ul>
+</div></details>
+
+<details class="ref"><summary>2B · ASAM criteria (substance use level of care)</summary><div class="refbody">
+<p class="h"><b>Six dimensions (4th ed.)</b><sup><a href="https://www.asam.org/asam-criteria" target="_blank">25</a></sup></p>
+<ul><li>Acute intoxication/withdrawal · biomedical conditions · psychiatric & cognitive · substance-use risks · recovery environment · person-centered (SDOH, preferences, motivation)</li></ul>
+<p class="h"><b>Levels</b></p>
+<ul>
+<li>1 Outpatient · 1.5 OP therapy · 1.7 Medically managed OP · 2.1 IOP · 2.5 High-intensity OP · 2.7 Medically managed IOP</li>
+<li>3.1 / 3.5 / 3.7 / 3.7-BIO residential · 4 Medically managed inpatient (x.7 = withdrawal management incl. benzo)</li>
+</ul>
+<p class="h"><b>Principles</b></p>
+<ul>
+<li>Person-centered, shared decisions; all programs co-occurring-capable; chronic-care model</li>
+<li>Should NOT justify administrative discharge. VA/DoD: placement-outcome trials lacking — "neither for nor against," useful as multidimensional assessment</li>
+</ul>
+</div></details>
+
+<details class="ref"><summary>2C · Inpatient admission criteria</summary><div class="refbody">
+<p class="h"><b>General indications</b><sup><a href="https://www.aafp.org/link_out?pmid=36260882" target="_blank">29</a></sup></p>
+<ul>
+<li>Active SI with plan/intent (esp. recent attempt); active HI with identified victim + plan</li>
+<li>Acute psychosis unable to self-care/dangerous; acute mania with dangerous behavior; severe self-neglect / grave disability</li>
+<li>Med stabilization not safe outpatient (e.g., clozapine init); failed step-down with deterioration</li>
+<li>Severe alcohol/sedative withdrawal (CIWA-Ar ≥20, DTs/seizure history); eating disorder with medical instability (BMI &lt;15); catatonia</li>
+</ul>
+<p class="h"><b>Factors associated with admission from ED</b><sup><a href="https://pubmed.ncbi.nlm.nih.gov/27385617" target="_blank">30</a></sup></p>
+<ul><li>SI/attempt · psychosis · involuntary presentation · prior hospitalization · intoxication + psych symptoms · homelessness</li></ul>
+</div></details>
+
+<details class="ref"><summary>2D · PHP &amp; IOP</summary><div class="refbody">
+<p class="h"><b>PHP</b> — ≥20 h/wk (≈5–6 h/day × 5)<sup><a href="https://onlinelibrary.wiley.com/doi/10.1002/jclp.70013" target="_blank">32</a></sup></p>
+<ul>
+<li>Multidisciplinary; intensive group + individual + meds; home each evening</li>
+<li>Step-down from inpatient (most common), step-up from outpatient, stabilized acute suicidality needing monitoring, impairment too severe for IOP</li>
+<li>&gt;90% report symptom reduction</li>
+</ul>
+<p class="h"><b>IOP</b> — 9–19 h/wk (≈3 h/day × 3–5)<sup><a href="https://onlinelibrary.wiley.com/doi/10.1002/jclp.20863" target="_blank">34</a></sup></p>
+<ul>
+<li>Primarily group; step-down from PHP/inpatient, step-up from outpatient, crisis stabilization, SUD IOP</li>
+<li>Goal: crisis management/stabilization; cost-effective; equal/superior satisfaction in some studies</li>
+</ul>
+</div></details>
+
+<details class="ref"><summary>2E · Crisis stabilization units</summary><div class="refbody">
+<ul>
+<li>Short-term (&lt;24–72 h), 24-hour-staffed observation as inpatient alternative; voluntary or involuntary</li>
+<li>Brief assessment, med initiation, safety planning, outpatient linkage; diverts admission, reduces ED boarding</li>
+<li><b>Indications:</b> acute crisis that may resolve with brief intervention · SI without imminent plan/intent (observe to clarify) · intoxication needing observation · diagnostic uncertainty (medical vs psych) · no inpatient bed (bridge)</li>
+</ul>
+</div></details>
+
+<details class="ref"><summary>2F · Residential treatment</summary><div class="refbody">
+<ul>
+<li>24-hour supervised care below hospital level</li>
+<li><b>Psychiatric residential:</b> chronic SMI with functional impairment, failed outpatient</li>
+<li><b>SUD residential:</b> ASAM 3.1–3.7 · <b>Dual-diagnosis:</b> co-occurring SUD + psychiatric</li>
+<li>Duration weeks–months</li>
+</ul>
+</div></details>
+
+<div class="reftier">Tier 3 · Diagnosis-specific disposition</div>
+
+<details class="ref"><summary>3A · Acute psychosis / schizophrenia</summary><div class="refbody">
+<ul>
+<li>First-episode psychosis → coordinated specialty care (e.g., NAVIGATE); early intervention improves outcomes<sup><a href="https://www.healthquality.va.gov/guidelines/MH/scz/VA-DOD-CPG-Schizophrenia-CPG_Finalv231924.pdf" target="_blank">35</a></sup></li>
+<li><b>Admit:</b> unable to self-care, dangerous behavior, command hallucinations with intent, can't maintain safety</li>
+<li><b>Discharge:</b> improving, adherent, safe environment, follow-up arranged</li>
+<li>Consider LAI before discharge for adherence risk; follow-up within 7 days; ACT, supported employment, psychosocial rehab, NAMI</li>
+</ul>
+</div></details>
+
+<details class="ref"><summary>3B · Mania / bipolar emergency</summary><div class="refbody">
+<ul>
+<li><b>Admit:</b> severe mania with dangerous behavior, psychotic features, can't self-care, no sleep for days</li>
+<li><b>Discharge:</b> resolving + med started + safe environment</li>
+<li>Start mood stabilizer (Li, VPA) or atypical; screen for bipolar before antidepressant (can precipitate mania)</li>
+<li><b>MDQ:</b> ≥7 symptoms positive (sens 73%, spec 90% in psych outpatients)<sup><a href="https://pubmed.ncbi.nlm.nih.gov/11058490" target="_blank">37</a></sup></li>
+</ul>
+</div></details>
+
+<details class="ref"><summary>3C · MDD with suicidality</summary><div class="refbody">
+<p class="h"><b>PHQ-9 bands</b><sup><a href="https://jamanetwork.com/journals/jama/fullarticle/10.1001/jama.2024.5756" target="_blank">8</a></sup></p>
+<ul>
+<li>0–4 minimal · 5–9 mild · 10–14 moderate (MDD cutoff; sens/spec 88%) · 15–19 mod-severe · 20–27 severe</li>
+<li>≥10 suggests MDD; ≥15 suggests active treatment; always assess Item 9 further regardless of total</li>
+</ul>
+<ul>
+<li><b>Disposition by suicide-risk level (Tier 1A), not PHQ-9 alone</b></li>
+<li>Start antidepressant (SSRI first-line); follow-up within 7 days; consider 24–72 h callback</li>
+</ul>
+</div></details>
+
+<details class="ref"><summary>3D · Substance intoxication</summary><div class="refbody">
+<ul>
+<li><b>Alcohol:</b> observe until BAL declining + ambulating safely, protect airway</li>
+<li><b>Stimulant:</b> monitor cardiac, agitation (benzos preferred), hyperthermia</li>
+<li><b>Opioid/overdose:</b> naloxone, observe ≥2 h post-naloxone (longer for long-acting), offer MOUD</li>
+<li><b>Discharge:</b> clinically sober, stable VS, no SI when sober, safe plan; screen for SUD + offer referral</li>
+</ul>
+</div></details>
+
+<details class="ref"><summary>3E · Substance withdrawal (CIWA-Ar, COWS, benzo)</summary><div class="refbody">
+<p class="h"><b>Alcohol — CIWA-Ar</b> (10 items, 0–67)<sup><a href="https://www.aafp.org/link_out?pmid=34523874" target="_blank">39</a></sup></p>
+<ul>
+<li>&lt;10 mild → supportive, consider gabapentin/carbamazepine, thiamine 100 mg</li>
+<li>10–18 moderate → benzodiazepines (chlordiazepoxide/diazepam, or lorazepam if liver disease), symptom-triggered</li>
+<li>≥19 severe → inpatient; inpatient if CIWA-Ar ≥20, DTs/seizure history, complicating conditions</li>
+<li>Benzos cut seizure risk 84% vs placebo for CIWA-Ar ≥10</li>
+</ul>
+<p class="h"><b>Opioid — COWS</b> (11 items, 0–47)<sup><a href="https://www.psychiatry.org/getattachment/879082d5-af6b-4c26-86e5-152bd53012b5/Resource-Document-Treatment-of-OUD-in-General-Hospital.pdf" target="_blank">41</a></sup></p>
+<ul>
+<li>5–12 mild · 13–24 moderate · 25–36 mod-severe · &gt;36 severe</li>
+<li>Buprenorphine induction at COWS ≥10 (target 12–16); 2–8 mg SL, repeat 2–4 mg q4h; IDU/mod-severe OUD often tolerate initial 8 mg</li>
+<li>Precipitated-withdrawal risk with full agonists (fentanyl/methadone); not life-threatening but drives relapse — offer MOUD before discharge</li>
+</ul>
+<p class="h"><b>Benzodiazepine</b><sup><a href="https://www.acmt.net/wp-content/uploads/2025/03/BZD-Tapering-Document-Final-Approved-Version-for-Distribution-03-03-25.pdf" target="_blank">27</a></sup></p>
+<ul><li>Can be life-threatening (seizures); high-dose → taper in inpatient/medically managed residential (ASAM 3.7/4); gradual over weeks–months, no abrupt stop</li></ul>
+</div></details>
+
+<details class="ref"><summary>3F · MOUD (medication for opioid use disorder)</summary><div class="refbody">
+<ul>
+<li><b>Buprenorphine:</b> ED/inpatient/outpatient; X-waiver eliminated (2023); maintenance 8–24 mg/day SL; MOUD follow-up within 72 h<sup><a href="https://jamanetwork.com/journals/jama/fullarticle/10.1001/jama.2025.26348" target="_blank">40</a></sup></li>
+<li><b>Methadone:</b> OUD only via licensed OTP (not outpatient Rx); many OTPs take walk-ins</li>
+<li><b>Naltrexone:</b> oral 50 mg/day or IM XR 380 mg/month; opioid-free 7–10 days first; also for AUD; no abuse potential</li>
+</ul>
+</div></details>
+
+<details class="ref"><summary>3G · Personality disorder in crisis (BPD)</summary><div class="refbody">
+<ul>
+<li>Brief hospitalization for acute safety only — prolonged admission can be counterproductive</li>
+<li>Safety planning (Stanley-Brown) is primary; avoid reinforcing ED visits as coping</li>
+<li>Refer to DBT (strongest evidence); consider PHP/IOP with DBT; coordinate with outpatient provider before discharge</li>
+</ul>
+</div></details>
+
+<details class="ref"><summary>3H · Delirium</summary><div class="refbody">
+<ul>
+<li><b>Delirium is a MEDICAL emergency — do NOT disposition to a psychiatric facility</b></li>
+<li>Identify & treat the underlying cause (infection, metabolic, medication, withdrawal, hypoxia); manage on a medical service</li>
+</ul>
+</div></details>
+
+<details class="ref"><summary>References</summary><div class="refbody refs">
+<ol>
+<li><a href="https://www.healthquality.va.gov/guidelines/MH/srb/VADOD-CPG-Suicide-Risk-Full-CPG-2024_Final_508.pdf" target="_blank">VA/DoD — Assessment & Management of Patients at Risk for Suicide (2024)</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/31450237" target="_blank">Sall et al. VA/DoD Suicide CPG Synopsis. Ann Intern Med. 2019</a></li>
+<li><a href="https://www.aafp.org/link_out?pmid=40736505" target="_blank">Arnold. VA/DoD Suicide Guidelines. AFP 2025</a></li>
+<li><a href="https://digitalassets.jointcommission.org/api/public/content/459bbe2be1ab4e5082b8a8d49d0c94e0?v=69255bb9" target="_blank">Joint Commission R3 Report 18 — Suicide Prevention</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/22193671" target="_blank">Posner et al. C-SSRS validity. Am J Psychiatry 2011</a></li>
+<li><a href="https://www.psychiatry.org/getattachment/d9944840-7141-4315-9dec-7224f9c55b8a/Resource-Document-Gambling-Disorder-in-Asian-American-and-Pacific-Islander-Communities.pdf" target="_blank">APA resource document (PHQ-9 reference)</a></li>
+<li><a href="https://jamanetwork.com/journals/jamanetworkopen/fullarticle/10.1001/jamanetworkopen.2023.37011" target="_blank">Zhang et al. Depressive Symptoms & Mortality. JAMA Netw Open 2023</a></li>
+<li><a href="https://jamanetwork.com/journals/jama/fullarticle/10.1001/jama.2024.5756" target="_blank">Simon et al. Management of Depression in Adults. JAMA 2024</a></li>
+<li><a href="https://publications.aap.org/pediatrics/article-lookup/doi/10.1542/peds.2023-064800" target="_blank">Hua et al. Suicide Risk in Adolescents. Pediatrics 2023</a></li>
+<li><a href="https://onlinelibrary.wiley.com/doi/10.1002/bsl.2411" target="_blank">Bryan. CBT-SP. Behav Sci Law 2019</a></li>
+<li><a href="https://jamanetwork.com/journals/jamapsychiatry/fullarticle/10.1001/jamapsychiatry.2020.1586" target="_blank">Doupnik et al. Suicide Prevention Interventions meta-analysis. JAMA Psychiatry 2020</a></li>
+<li><a href="https://www.psychiatry.org/getattachment/4046d4aa-a3b4-4464-9cd4-5317eb0c372b/Resource-Document-2019-Decisional-Capacity-Determinations-in-Consultation-Liaison-Psychiatry.pdf" target="_blank">APA — Decisional Capacity in C-L Psychiatry (2019)</a></li>
+<li><a href="https://linkinghub.elsevier.com/retrieve/pii/S0196-0644(17)30070-7" target="_blank">ACEP Clinical Policy — Adult Psychiatric Patient in the ED. Ann Emerg Med 2017</a></li>
+<li><a href="https://www.cochranelibrary.com/cdsr/doi/10.1002/14651858.CD014826/full" target="_blank">Cochrane — Parenteral medication for acute severe behavioural disturbance (2024)</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/41355751" target="_blank">Isoardi et al. Parenteral sedation for agitation. Clin Toxicol 2026</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/29885904" target="_blank">Klein et al. IM midazolam/olanzapine/ziprasidone/haloperidol. Ann Emerg Med 2018</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/28210358" target="_blank">AAEP Medical Clearance Part I. West J Emerg Med 2017</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/28611885" target="_blank">AAEP Medical Clearance Part II. West J Emerg Med 2017</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/37492063" target="_blank">Casey et al. Refining medical clearance. Front Psychiatry 2023</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/42233919" target="_blank">Ünlü et al. Medical screening of adult psychiatric ED patients. Ann Emerg Med 2026</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/40652914" target="_blank">Mesbah et al. Validation of medical-clearance scoring algorithms. Am J Emerg Med 2025</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/10863991" target="_blank">Sowers et al. LOCUS reliability & validity. Community Ment Health J 1999</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/23192607" target="_blank">Kimura et al. LOCUS in Japan. Community Ment Health J 2013</a></li>
+<li><a href="https://digitalassets.jointcommission.org/api/public/content/56713d1ff0184e24aaeb8e945cb251f1?v=0947fe71" target="_blank">Joint Commission R3 Report 25 — SUD standards</a></li>
+<li><a href="https://www.asam.org/asam-criteria" target="_blank">ASAM Criteria</a></li>
+<li><a href="https://downloads.asam.org/sitefinity-production-blobs/docs/default-source/guidelines/asam_engagement-and-retention-of-nonabstinent-patients_final_082624.pdf" target="_blank">ASAM — Engagement & Retention of Nonabstinent Patients (2024)</a></li>
+<li><a href="https://www.acmt.net/wp-content/uploads/2025/03/BZD-Tapering-Document-Final-Approved-Version-for-Distribution-03-03-25.pdf" target="_blank">Joint CPG on Benzodiazepine Tapering (2024)</a></li>
+<li><a href="https://www.healthquality.va.gov/guidelines/MH/sud/VA-DoD-SUD-CPG_Final_for-508_v3.pdf" target="_blank">VA/DoD — Management of SUD (2021)</a></li>
+<li><a href="https://www.aafp.org/link_out?pmid=36260882" target="_blank">Ford et al. VA/DoD SUD Guidelines. AFP 2022</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/27385617" target="_blank">Hamilton et al. Hospitalization after ED behavioral-health visits. Acad Emerg Med 2016</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/34379275" target="_blank">Marzola et al. Psychiatric patients in the ED. Intern Emerg Med 2022</a></li>
+<li><a href="https://onlinelibrary.wiley.com/doi/10.1002/jclp.70013" target="_blank">Terrill et al. Non-response in a PHP. J Clin Psychol 2025</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/37389508" target="_blank">Gautam et al. Potential of PHPs. JAACAP 2024</a></li>
+<li><a href="https://onlinelibrary.wiley.com/doi/10.1002/jclp.20863" target="_blank">Ritschel et al. DBT in an IOP. J Clin Psychol 2012</a></li>
+<li><a href="https://www.healthquality.va.gov/guidelines/MH/scz/VA-DOD-CPG-Schizophrenia-CPG_Finalv231924.pdf" target="_blank">VA/DoD — First-Episode Psychosis & Schizophrenia (2023)</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/33278937" target="_blank">McIntyre et al. Bipolar Disorders. Lancet 2020</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/11058490" target="_blank">Hirschfeld et al. Mood Disorder Questionnaire. Am J Psychiatry 2000</a></li>
+<li><a href="https://www.healthquality.va.gov/guidelines/MH/mdd/VADODMDDCPGFinal508.pdf" target="_blank">VA/DoD — Management of MDD (2022)</a></li>
+<li><a href="https://www.aafp.org/link_out?pmid=34523874" target="_blank">Tiglao et al. Alcohol Withdrawal Syndrome: Outpatient Management. AFP 2021</a></li>
+<li><a href="https://jamanetwork.com/journals/jama/fullarticle/10.1001/jama.2025.26348" target="_blank">Harris et al. Medications for OUD, Withdrawal, Overdose. JAMA 2026</a></li>
+<li><a href="https://www.psychiatry.org/getattachment/879082d5-af6b-4c26-86e5-152bd53012b5/Resource-Document-Treatment-of-OUD-in-General-Hospital.pdf" target="_blank">APA — Treatment of OUD in the General Hospital (2022)</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/19647958" target="_blank">Tompkins et al. COWS concurrent validation. Drug Alcohol Depend 2009</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/12924748" target="_blank">Wesson & Ling. The COWS. J Psychoactive Drugs 2003</a></li>
+</ol>
+<p class="note">Condensed for point-of-care reference. Always consult primary guidelines and state-specific law.</p>
+</div></details>
+
+</section>
+</div>
+</div>
+
+<div class="statusbar"><div class="inner" id="statusInner"></div></div>
+
+<script>var DATA=[{"county":"Columbus (Franklin)","cat":"Crisis & psych urgent care","name":"Netcare Access","phone":"(614) 276-2273","address":"199 S. Central Ave.","svc":"24/7 adult crisis assessment, stabilization & mobile team","access":"Walk-in 24/7 · Medicaid · Adults"},{"county":"Columbus (Franklin)","cat":"Crisis & psych urgent care","name":"Franklin County Crisis Care Center","phone":"(614) 222-3737","address":"465 Harmon Ave.","svc":"24/7 walk-in mental-health & addiction crisis stabilization (county hub)","access":"Walk-in 24/7 · Medicaid · Adults"},{"county":"Columbus (Franklin)","cat":"Crisis & psych urgent care","peds":1,"name":"Nationwide Children's — Psychiatric Crisis Dept.","phone":"(614) 722-1800","address":"444 Butterfly Gardens Dr.","svc":"Pediatric psych emergency + youth crisis stabilization unit","access":"Walk-in 24/7 · Medicaid · Children & teens"},{"county":"Columbus (Franklin)","cat":"Crisis & psych urgent care","name":"OSU Harding — Behavioral Health Urgent Care","phone":"(614) 293-8295","address":"1670 Upham Dr., 1st Fl.","svc":"Adult walk-in urgent mental-health clinic (non-ER)","access":"Walk-in M-F · Medicaid · Adults"},{"county":"Columbus (Franklin)","cat":"Outpatient psychiatry","name":"OSU Harding — Mental & Behavioral Health","phone":"(614) 293-9600","address":"1670 Upham Dr.","svc":"Psychiatric evaluation & medication management","access":"Referral/self · Medicaid · Adults & adolescents"},{"county":"Columbus (Franklin)","cat":"Outpatient psychiatry","name":"OhioHealth Outpatient Behavioral Health","phone":"(614) 566-4414","address":"3820 Olentangy River Rd.","svc":"Psychiatry & therapy for mood/anxiety; PHP & IOP","access":"Referral · Adults"},{"county":"Columbus (Franklin)","cat":"Outpatient psychiatry","name":"Mount Carmel Behavioral Health (outpatient)","phone":"(614) 368-0883","address":"4646 Hilton Corporate Dr.","svc":"Outpatient psychiatry, med management, diagnostic assessment","access":"Self-refer · Adults 18+"},{"county":"Columbus (Franklin)","cat":"Outpatient psychiatry","peds":1,"name":"Nationwide Children's — Big Lots Behavioral Health Pavilion","phone":"(614) 355-8080","address":"444 Butterfly Gardens Dr.","svc":"Child & adolescent psychiatry & therapy","access":"Intake call · Medicaid · Children & teens"},{"county":"Columbus (Franklin)","cat":"Therapy & counseling","name":"North Central Mental Health Services","phone":"(614) 299-6600","address":"1301 N. High St.","svc":"Counseling, psychiatry, case management","access":"Walk-in M-F · Medicaid · Adults"},{"county":"Columbus (Franklin)","cat":"Therapy & counseling","name":"Southeast Healthcare","phone":"(614) 225-0980","address":"16 W. Long St.","svc":"Integrated mental health + substance use + primary care","access":"Self-refer · Medicaid · All ages"},{"county":"Columbus (Franklin)","cat":"Therapy & counseling","name":"Concord Counseling Services","phone":"(614) 882-9338","address":"700 Brooksedge Blvd., Westerville","svc":"Individual/family counseling, psychiatry, crisis","access":"Self-refer · Medicaid · All ages"},{"county":"Columbus (Franklin)","cat":"Therapy & counseling","name":"Syntero","phone":"(614) 889-5722","address":"299 Cramer Creek Ct., Dublin","svc":"Individual, family, geriatric & trauma counseling","access":"Self-refer · Medicaid · All ages"},{"county":"Columbus (Franklin)","cat":"Therapy & counseling","name":"Directions for Youth & Families","phone":"(614) 294-2661","address":"1515 Indianola Ave.","svc":"Youth & family counseling and prevention","access":"Self-refer · Medicaid · Youth & families"},{"county":"Columbus (Franklin)","cat":"IOP / PHP","name":"OSU Harding — PHP / IOP","phone":"(614) 293-9560","address":"1670 Upham Dr.","svc":"Partial hospitalization & intensive outpatient (incl. young-adult 18-29 track)","access":"Referral/self · Medicaid · Adults"},{"county":"Columbus (Franklin)","cat":"IOP / PHP","name":"Columbus Springs Dublin","phone":"(614) 717-1800","address":"7625 Hospital Dr., Dublin","svc":"Inpatient + PHP/IOP","access":"Free assessment 24/7 · Adults & adolescents"},{"county":"Columbus (Franklin)","cat":"IOP / PHP","name":"Columbus Springs East","phone":"(614) 717-1800","address":"2085 Citygate Dr.","svc":"Inpatient + PHP/IOP behavioral health","access":"Free assessment 24/7 · Adults"},{"county":"Columbus (Franklin)","cat":"IOP / PHP","name":"Mount Carmel Behavioral Health (PHP/IOP)","phone":"(614) 487-2080","address":"4646 Hilton Corporate Dr.","svc":"Adult inpatient, PHP & IOP","access":"Assessment · Adults"},{"county":"Columbus (Franklin)","cat":"Specialty psychiatry","name":"OSU EPICENTER / STEP — First-Episode Psychosis","phone":"(614) 685-6052","address":"OSU Harding, 1670 Upham Dr.","svc":"Coordinated specialty care for early/first-episode psychosis (ages ~12-35)","access":"Referral/self · Medicaid · Youth & young adults"},{"county":"Columbus (Franklin)","cat":"Specialty psychiatry","name":"OSU Women's Behavioral Health — Reproductive/Perinatal Psychiatry","phone":"(614) 293-9600","address":"OSU Wexner Medical Center","svc":"Perinatal/postpartum & reproductive mood/anxiety care","access":"Referral · Adult women"},{"county":"Columbus (Franklin)","cat":"Specialty psychiatry","name":"OSU Older Adult Mental Health (Geriatric Psychiatry)","phone":"(614) 293-9600","address":"OSU Wexner Medical Center","svc":"Geriatric psychiatry diagnosis & treatment","access":"Referral · Older adults"},{"county":"Columbus (Franklin)","cat":"Specialty psychiatry","name":"OSU STAR Trauma Recovery Center","phone":"(614) 293-7827","address":"3650 Olentangy River Rd., Ste. 310","svc":"Trauma/PTSD recovery for adult crime & violence survivors","access":"Referral/self · Sliding/grant-funded · Adults"},{"county":"Columbus (Franklin)","cat":"Specialty psychiatry","peds":1,"name":"Nationwide Children's — Eating Disorders Program","phone":"(614) 355-6300","address":"500 E. Main St.","svc":"Multidisciplinary eating-disorder care incl. IOP/PHP (ages ~12-21)","access":"Referral · Medicaid · Children & teens"},{"county":"Columbus (Franklin)","cat":"Specialty psychiatry","peds":1,"name":"The Buckeye Ranch — Youth Behavioral Health","phone":"(614) 384-7798","address":"5665 Hoover Rd., Grove City","svc":"Same-day access, outpatient, IOP & residential youth care","access":"Same-day access · Medicaid · Children & youth"},{"county":"Columbus (Franklin)","cat":"Substance use & recovery","name":"Maryhaven","phone":"(614) 445-8131","address":"1791 Alum Creek Dr. (walk-in: 1430 S. High St.)","svc":"Detox/stabilization, residential, outpatient & MAT","access":"Walk-in central intake · Medicaid · Ages 13+"},{"county":"Columbus (Franklin)","cat":"Substance use & recovery","name":"OSU Talbot Hall — Addiction Medicine","phone":"(614) 257-3760","address":"1441 Phale D. Hale Dr.","svc":"Inpatient & outpatient substance-use treatment","access":"Referral/intake · Medicaid · Adults"},{"county":"Columbus (Franklin)","cat":"Shelter & housing","name":"Community Shelter Board — Homeless Hotline","phone":"(614) 274-7000","address":"","svc":"24/7 homeless crisis line / coordinated shelter access","access":"Call 24/7 · Adults & families"},{"county":"Columbus (Franklin)","cat":"Shelter & housing","name":"Columbus Metropolitan Housing Authority (CMHA)","phone":"(614) 421-6000","address":"880 E. 11th Ave.","svc":"Public housing / Section 8; eviction-prevention referrals","access":"Call · Income-based"},{"county":"Columbus (Franklin)","cat":"Shelter & housing","name":"The Open Shelter, Inc.","phone":"(614) 222-2885","address":"1037 Parsons Ave.","svc":"Day shelter; ID/document help, clothing, meals","access":"Walk-in · All"},{"county":"Columbus (Franklin)","cat":"Domestic violence & assault","name":"Franklin County Domestic Violence Hotline","phone":"(614) 224-4663","address":"","svc":"24/7 DV crisis hotline, shelter & safety planning","access":"Call 24/7 · All"},{"county":"Columbus (Franklin)","cat":"Food","name":"Mid-Ohio Food Collective","phone":"(614) 277-3663","address":"3960 Brookham Dr., Grove City","svc":"Region's largest food bank — pantry network & SNAP help","access":"Call / find a pantry · All"},{"county":"Columbus (Franklin)","cat":"Food","name":"Stowe Mission of Central Ohio","phone":"(614) 445-8400","address":"888 Parsons Ave.","svc":"Community kitchen, food pantry & free clinics","access":"Walk-in · All"},{"county":"Columbus (Franklin)","cat":"Health & medical","name":"PrimaryOne Health","phone":"(614) 645-5500","address":"Multiple sites","svc":"Federally Qualified Health Center — medical, dental, behavioral","access":"Self-refer · Medicaid/sliding scale · All"},{"county":"Columbus (Franklin)","cat":"Health & medical","name":"Columbus Public Health","phone":"(614) 645-7417","address":"240 Parsons Ave.","svc":"Public health clinics, immunizations, vital statistics","access":"Call · All"},{"county":"Columbus (Franklin)","cat":"Benefits & financial","name":"Franklin County Job & Family Services","phone":"(614) 233-2000","address":"1721 Northland Park Ave.","svc":"Medicaid, SNAP food, cash assistance, childcare","access":"Call/apply · Income-based"},{"county":"Columbus (Franklin)","cat":"Employment & re-entry","name":"OhioMeansJobs Columbus-Franklin County","phone":"(614) 559-5052","address":"1111 E. Broad St.","svc":"Workforce & job-seeker services","access":"Walk-in · All"},{"county":"Columbus (Franklin)","cat":"Veterans","name":"Columbus VA (Chalmers P. Wylie Ambulatory Care Center)","phone":"(614) 257-5200","address":"420 N. James Rd.","svc":"VA outpatient psychiatry, therapy/counseling, substance-use treatment & primary care for veterans","access":"Enroll / referral · Veterans"},{"county":"Columbus (Franklin)","cat":"Legal, ID & records","name":"Franklin County Municipal Court Self-Help Center","phone":"(614) 645-7381","address":"375 S. High St., 16th Fl.","svc":"Free self-representation legal help","access":"Walk-in · All"},{"county":"Cleveland (Cuyahoga)","cat":"Crisis & psych urgent care","name":"FrontLine Service — 24-Hr Crisis Line","phone":"(216) 623-6888","address":"1744 Payne Ave.","svc":"County 24/7 suicide, mental-health & addiction crisis line (also 988)","access":"Call 24/7 · Medicaid · All ages"},{"county":"Cleveland (Cuyahoga)","cat":"Crisis & psych urgent care","name":"FrontLine Service — Mobile Crisis Team","phone":"(216) 623-6555","address":"","svc":"Mobile crisis team — responds in person to home/school/hospital","access":"Call · Medicaid · All ages"},{"county":"Cleveland (Cuyahoga)","cat":"Crisis & psych urgent care","name":"Cuyahoga County MRSS — Youth Mobile Crisis","phone":"(888) 418-6777","address":"County-wide","svc":"Mobile Response & Stabilization — rapid in-person youth crisis response","access":"Call 24/7 · Medicaid · Youth 0-20 & families"},{"county":"Cleveland (Cuyahoga)","cat":"Crisis & psych urgent care","name":"Cuyahoga County Diversion Center","phone":"(216) 623-6888","address":"1804 E. 55th St.","svc":"Crisis & detox stabilization, jail diversion (MH & SUD)","access":"Phone screening required (no walk-ins) · Medicaid · Adults"},{"county":"Cleveland (Cuyahoga)","cat":"Crisis & psych urgent care","name":"MetroHealth — Psychiatric Emergency / Behavioral Health","phone":"(216) 957-3950","address":"2500 MetroHealth Dr.","svc":"Psychiatric crisis care in emergency departments","access":"ED walk-in · Medicaid · Adults & youth"},{"county":"Cleveland (Cuyahoga)","cat":"Crisis & psych urgent care","name":"University Hospitals — Psychiatric Emergency","phone":"(216) 844-2400","address":"11100 Euclid Ave.","svc":"24-hr psych emergency assessment; only OH med-psych unit","access":"ED walk-in / referral · All ages"},{"county":"Cleveland (Cuyahoga)","cat":"Outpatient psychiatry","name":"Cleveland Clinic — Center for Behavioral Health (Lutheran Hospital)","phone":"(216) 445-8455","address":"1730 W. 25th St.","svc":"Psychiatric evaluation, med management, mood disorders program","access":"Self-refer · Insurance/Medicaid varies · Adults"},{"county":"Cleveland (Cuyahoga)","cat":"Outpatient psychiatry","name":"University Hospitals — Behavioral Health Institute","phone":"(216) 844-2400","address":"11100 Euclid Ave.","svc":"Adult & child psychiatry, psychology, IOP","access":"Self-refer / referral · All ages"},{"county":"Cleveland (Cuyahoga)","cat":"Outpatient psychiatry","name":"MetroHealth — Behavioral & Mental Health","phone":"(216) 778-4428","address":"2500 MetroHealth Dr.","svc":"Medication management, counseling, SUD treatment","access":"Self-refer (assessment first) · Medicaid · All ages"},{"county":"Cleveland (Cuyahoga)","cat":"Outpatient psychiatry","name":"Signature Health","phone":"(440) 578-8200","address":"24200 Chagrin Blvd., Beachwood (+ Lakewood, Maple Hts.)","svc":"Psychiatry, counseling, addiction & primary care","access":"Self-refer · Walk-in hours · Medicaid · All ages"},{"county":"Cleveland (Cuyahoga)","cat":"Outpatient psychiatry","name":"The Centers / Circle Health Services","phone":"(216) 325-9355","address":"12201 Euclid Ave.","svc":"Behavioral health, psychiatry, addiction, primary care (FQHC)","access":"Self-refer · Medicaid/sliding scale · All ages"},{"county":"Cleveland (Cuyahoga)","cat":"Therapy & counseling","name":"Recovery Resources","phone":"(216) 431-4131","address":"3950 Chester Ave.","svc":"Mental-health & addiction counseling, case management","access":"Self-refer · Medicaid · Adults"},{"county":"Cleveland (Cuyahoga)","cat":"Therapy & counseling","name":"Murtis Taylor Human Services System","phone":"(216) 283-4400","address":"13422 Kinsman Rd.","svc":"Behavioral health, addiction, youth/family/senior services","access":"Self-refer · Medicaid · All ages"},{"county":"Cleveland (Cuyahoga)","cat":"Therapy & counseling","name":"OhioGuidestone","phone":"(844) 622-5564","address":"Cuyahoga sites incl. 18120 Puritas Ave.","svc":"Counseling, CCBHC services, MAT, family services","access":"Self-refer · Medicaid · All ages"},{"county":"Cleveland (Cuyahoga)","cat":"Therapy & counseling","name":"Catholic Charities Diocese of Cleveland","phone":"(216) 334-2900","address":"7911 Detroit Ave.","svc":"Counseling, psychiatric & substance-use services","access":"Self-refer (central intake) · Medicaid/sliding scale · All ages"},{"county":"Cleveland (Cuyahoga)","cat":"Therapy & counseling","name":"Far West Center","phone":"(440) 835-6212","address":"29133 Health Campus Dr., Westlake","svc":"Individual, family & group counseling","access":"Self-refer · Medicaid · All ages"},{"county":"Cleveland (Cuyahoga)","cat":"IOP / PHP","name":"Cleveland Clinic Lutheran Hospital — Behavioral Health","phone":"(216) 363-2122","address":"1730 W. 25th St.","svc":"Detox/MAT, inpatient, PHP & IOP; older-adult & mood-disorder units","access":"Referral & admissions call · Medicaid · Adults"},{"county":"Cleveland (Cuyahoga)","cat":"IOP / PHP","name":"Highland Springs","phone":"(216) 302-3070","address":"4199 Mill Pond Dr., Highland Hills","svc":"Inpatient, PHP & IOP for mental health & addiction","access":"Walk-in assessment 24/7 · Adults"},{"county":"Cleveland (Cuyahoga)","cat":"IOP / PHP","name":"Windsor-Laurelwood Center","phone":"(440) 953-3000","address":"35900 Euclid Ave., Willoughby","svc":"Psychiatric hospital; inpatient + PHP/IOP (MH & addiction)","access":"24/7 assessment · Children, teens & adults"},{"county":"Cleveland (Cuyahoga)","cat":"Specialty psychiatry","peds":1,"name":"Bellefaire JCB","phone":"(216) 932-2800","address":"22001 Fairmount Blvd., Shaker Heights","svc":"Child/adolescent psychiatry, residential, autism; leads youth crisis (MRSS)","access":"Referral + crisis hotline · Medicaid · Youth to 21"},{"county":"Cleveland (Cuyahoga)","cat":"Specialty psychiatry","peds":1,"name":"Applewood Centers","phone":"(216) 459-9827","address":"10427 Detroit Ave.","svc":"Youth psychiatry, day treatment, maternal mental health, residential","access":"Intake hotline · Medicaid · Birth-21 & families"},{"county":"Cleveland (Cuyahoga)","cat":"Specialty psychiatry","name":"The Emily Program — Ohio (Eating Disorders)","phone":"(888) 364-5977","address":"3401 Enterprise Pl., Ste. 250, Beachwood","svc":"Residential, PHP, IOP & outpatient eating-disorder care","access":"Referral/intake · Insurance · Adolescents & adults"},{"county":"Cleveland (Cuyahoga)","cat":"Specialty psychiatry","name":"Cleveland Clinic Lutheran — Perinatal & Geriatric Psychiatry","phone":"(216) 363-2122","address":"1730 W. 25th St.","svc":"Women's/perinatal mood program & older-adult psychiatry unit","access":"Referral · Adult women & older adults"},{"county":"Cleveland (Cuyahoga)","cat":"Substance use & recovery","name":"Glenbeigh (Cleveland Clinic affiliate)","phone":"(800) 234-1001","address":"Cleveland-area outpatient sites","svc":"Detox/rehab + outpatient/IOP for alcohol & drugs","access":"24/7 admissions · Adults"},{"county":"Cleveland (Cuyahoga)","cat":"Shelter & housing","name":"Coordinated Intake (FrontLine Service)","phone":"(216) 674-6700","address":"1736 Superior Ave., 2nd Fl.","svc":"Front door to all publicly funded emergency shelter","access":"Call M-F 8-8 (after hours 211) · Adults & families"},{"county":"Cleveland (Cuyahoga)","cat":"Shelter & housing","name":"Norma Herr Women's Center (FrontLine)","phone":"(216) 479-0020","address":"2227 Payne Ave.","svc":"Women's public emergency shelter","access":"Via coordinated intake · Women"},{"county":"Cleveland (Cuyahoga)","cat":"Shelter & housing","name":"The City Mission — Crossroads (Men) / Laura's Home (Women)","phone":"(216) 431-3515","address":"5310 Carnegie Ave.","svc":"Men's shelter; Laura's Home women & children crisis shelter (216-472-5500)","access":"Call · Men / women & children"},{"county":"Cleveland (Cuyahoga)","cat":"Shelter & housing","name":"Cuyahoga Metropolitan Housing Authority (CMHA)","phone":"(216) 348-5000","address":"8120 Kinsman Rd.","svc":"Public & subsidized housing authority","access":"Call · Income-based"},{"county":"Cleveland (Cuyahoga)","cat":"Domestic violence & assault","name":"Cleveland Rape Crisis Center — 24-hr Hotline","phone":"(216) 619-6192","address":"","svc":"24/7 crisis support for sexual violence & trafficking survivors","access":"Call/text 24/7 · All"},{"county":"Cleveland (Cuyahoga)","cat":"Domestic violence & assault","name":"Journey Center for Safety & Healing","phone":"(216) 391-4357","address":"","svc":"24/7 domestic-violence & child-abuse helpline, shelter & advocacy","access":"Call 24/7 · All"},{"county":"Cleveland (Cuyahoga)","cat":"Food","name":"Greater Cleveland Food Bank","phone":"(216) 738-2067","address":"","svc":"Food assistance & SNAP/benefits help (pantry network)","access":"Call / find a pantry · All"},{"county":"Cleveland (Cuyahoga)","cat":"Food","name":"West Side Catholic Center","phone":"(216) 631-4741","address":"3135 Lorain Ave.","svc":"Choice food pantry, hot meals, day shelter, showers","access":"Walk-in · All"},{"county":"Cleveland (Cuyahoga)","cat":"Health & medical","name":"Care Alliance Health Center","phone":"(216) 781-6724","address":"1530 St. Clair Ave. (+ 3 sites)","svc":"FQHC for homeless/uninsured: medical, dental, behavioral","access":"Self-refer · Medicaid/sliding scale · All"},{"county":"Cleveland (Cuyahoga)","cat":"Health & medical","name":"AIDS Taskforce of Greater Cleveland (AHF)","phone":"(216) 621-0766","address":"2829 Euclid Ave.","svc":"Free HIV/STI testing, prevention, medication assistance, case management","access":"Walk-in · All"},{"county":"Cleveland (Cuyahoga)","cat":"Benefits & financial","name":"Cuyahoga Job & Family Services","phone":"(216) 987-7000","address":"","svc":"Medicaid, SNAP food, cash assistance, childcare","access":"Call/apply · Income-based"},{"county":"Cleveland (Cuyahoga)","cat":"Employment & re-entry","name":"Greater Cleveland Works (OhioMeansJobs)","phone":"(216) 777-8200","address":"1910 Carnegie Ave.","svc":"Workforce & job-seeker services","access":"Walk-in · All"},{"county":"Cleveland (Cuyahoga)","cat":"Veterans","name":"Cleveland VA (Louis Stokes VA Medical Center)","phone":"(216) 791-3800","address":"10701 East Blvd.","svc":"VA outpatient psychiatry, therapy/counseling, detox / substance-use treatment & primary care for veterans","access":"Enroll / referral · Veterans"},{"county":"Cleveland (Cuyahoga)","cat":"Legal, ID & records","name":"Legal Aid Society of Cleveland","phone":"(888) 817-3777","address":"","svc":"Free civil legal help: housing, eviction, benefits","access":"Call · Income-based"},{"county":"Columbus (Franklin)","cat":"Substance use & recovery","sub":"detox","name":"Maryhaven Addiction Stabilization Center (detox)","phone":"(614) 445-8131","address":"1430 S. High St.","svc":"55-bed medical detox / withdrawal management; opioid & overdose stabilization","access":"Walk-in 24/7 · Medicaid · Adults"},{"county":"Columbus (Franklin)","cat":"Substance use & recovery","sub":"detox","name":"Ohio Hospital for Psychiatry — Detox","phone":"(855) 801-2129","address":"880 Greenlawn Ave.","svc":"Inpatient medical detox (alcohol, opioids, benzodiazepines)","access":"Assessment 24/7 · Adults"},{"county":"Cleveland (Cuyahoga)","cat":"Substance use & recovery","sub":"detox","name":"Cleveland Clinic Lutheran — Alcohol & Drug Recovery Center (detox)","phone":"(216) 636-5860","address":"1730 W. 25th St.","svc":"Medically supervised detox + inpatient/PHP/IOP chemical-dependency treatment","access":"Assessment / referral · Adults"},{"county":"Cleveland (Cuyahoga)","cat":"Substance use & recovery","sub":"detox","name":"Stella Maris","phone":"(216) 781-0550","address":"1320 Washington Ave.","svc":"ASAM 3.7 medical detox, residential, PHP/IOP & recovery housing","access":"Daily walk-in assessments 8a-2p · Adults"},{"county":"Columbus (Franklin)","cat":"Specialty psychiatry","name":"OSU James — Psychosocial Oncology Program","phone":"(614) 366-8700","address":"2050 Kenny Rd., Columbus 43221","svc":"Cancer mental health — psychiatry, psychology & social work for anxiety, depression & cognitive effects","access":"Referral · Cancer patients"},{"county":"Cleveland (Cuyahoga)","cat":"Specialty psychiatry","name":"Cleveland Clinic — Cancer Answer Line (Psycho-Oncology)","phone":"(866) 223-8100","address":"9500 Euclid Ave.","svc":"Cancer mental-health line routing to psycho-oncology psychiatry & psychology","access":"Call M-F · Cancer patients"},{"county":"Cleveland (Cuyahoga)","cat":"Specialty psychiatry","name":"University Hospitals Seidman — Psycho-Oncology","phone":"(440) 915-1719","address":"11100 Euclid Ave.","svc":"Cancer mental-health assessment, counseling, psychiatry & social work","access":"Intake line · Cancer patients"}];
+var NATIONAL=[{"county":"National","cat":"Emergency","name":"911 — Emergency","phone":"911","svc":"Police, fire & medical emergency — or go to the nearest ER","access":"All ages","panel":"D"},{"county":"National","cat":"Crisis line","name":"988 Suicide & Crisis Lifeline","phone":"988","svc":"Call or text 988 — 24/7 crisis & suicide prevention","access":"All ages","panel":"D"},{"county":"National","cat":"Crisis line","name":"Crisis Text Line","phone":"741741","svc":"Text HOME to 741741 — 24/7 text crisis support","access":"All ages","panel":"D"},{"county":"National","cat":"Crisis line","name":"Veterans Crisis Line","phone":"988","svc":"Dial 988 then press 1 — 24/7 veteran crisis support","access":"Veterans","panel":"D","flag":"veteran"},{"county":"National","cat":"Crisis line","name":"Trans Lifeline","phone":"877-565-8860","svc":"Peer crisis support for transgender people","access":"All ages","panel":"D","flag":"lgbtq"},{"county":"National","cat":"Substance use","name":"SAMHSA National Helpline","phone":"1-800-662-4357","svc":"24/7 free, confidential treatment referral (alcohol & drugs)","access":"All · multilingual","panel":"C"},{"county":"National","cat":"Substance use","name":"Narcotics Anonymous (NA)","phone":"1-818-773-9999","svc":"Mutual-aid recovery meetings & info","access":"All","panel":"C"},{"county":"National","cat":"Substance use","name":"SMART Recovery","phone":"1-440-951-5357","svc":"Science-based mutual-aid recovery groups","access":"All","panel":"C"},{"county":"National","cat":"Substance use","name":"Never Use Alone","phone":"1-800-484-3731","svc":"24/7 overdose-prevention hotline for people using alone","access":"All","panel":"C"},{"county":"National","cat":"Referral","name":"211 — United Way","phone":"211","svc":"24/7 referral to housing, food, transport, benefits & more","access":"All","panel":"F","need":"catchall"},{"county":"National","cat":"Benefits","name":"Ohio Medicaid Consumer Hotline","phone":"1-800-324-8680","svc":"Enroll in / manage Medicaid & managed-care plans","access":"Medicaid","panel":"F","need":"financial"},{"county":"National","cat":"Benefits","name":"Ohio Benefits (SNAP / cash / childcare)","phone":"1-844-640-6446","svc":"Apply for SNAP food, cash assistance & Medicaid","access":"Income-based","panel":"F","need":"financial"},{"county":"National","cat":"Benefits","name":"Social Security (SSI / SSDI)","phone":"1-800-772-1213","svc":"Disability & retirement benefits","access":"All","panel":"F","need":"financial"},{"county":"National","cat":"Transportation","name":"Medicaid Non-Emergency Transportation (NEMT)","phone":"1-800-324-8680","svc":"Free rides to covered appointments — call your managed-care plan or the Medicaid hotline","access":"Medicaid","panel":"F","need":"transport"},{"county":"National","cat":"Domestic violence","name":"National Domestic Violence Hotline","phone":"1-800-799-7233","svc":"24/7 confidential DV support & safety planning (text START to 88788)","access":"All","panel":"F","need":"dv"},{"county":"National","cat":"Childcare","name":"Head Start / Early Head Start Locator","phone":"1-866-763-6481","svc":"Free early-childhood education & childcare","access":"Income-based","panel":"F","need":"childcare"},{"county":"National","cat":"Pediatric","name":"Boys Town National Hotline","phone":"1-800-448-3000","svc":"24/7 counseling for kids, teens & families","access":"Youth & families","panel":"G","flag":"pediatric"},{"county":"National","cat":"Pediatric","name":"National Parent & Youth Helpline","phone":"1-855-427-2736","svc":"Support for parents & caregivers in crisis","access":"Families","panel":"G","flag":"pediatric"},{"county":"National","cat":"Perinatal","name":"Postpartum Support International (PSI)","phone":"1-800-944-4773","svc":"Perinatal mood & anxiety support (call or text)","access":"Perinatal","panel":"G","flag":"perinatal"},{"county":"National","cat":"Perinatal","name":"National Maternal Mental Health Hotline","phone":"1-833-852-6262","svc":"24/7 free support for pregnant & postpartum people","access":"Perinatal","panel":"G","flag":"perinatal"},{"county":"National","cat":"Veteran","name":"Vet Center Combat Call Center","phone":"1-877-927-8387","svc":"24/7 readjustment-counseling line staffed by combat veterans","access":"Veterans & families","panel":"G","flag":"veteran"},{"county":"National","cat":"Veteran","name":"VA Caregiver Support Line","phone":"1-855-260-3274","svc":"Support for those caring for veterans","access":"Veteran caregivers","panel":"G","flag":"veteran"},{"county":"National","cat":"LGBTQ+","name":"The Trevor Project","phone":"1-866-488-7386","svc":"24/7 crisis support for LGBTQ+ youth (<25); text START to 678-678","access":"LGBTQ+ youth","panel":"G","flag":"lgbtq"},{"county":"National","cat":"LGBTQ+","name":"PFLAG (find a local chapter)","phone":"1-202-467-8180","svc":"Peer support for LGBTQ+ people & families","access":"All","panel":"G","flag":"lgbtq"},{"county":"National","cat":"TBI / neuro","name":"Brain Injury Association of Ohio","phone":"1-855-444-6443","svc":"Information, resources & support for brain injury","access":"All","panel":"G","flag":"tbi"},{"county":"National","cat":"IDD","name":"Ohio Dept. of Developmental Disabilities","phone":"1-866-313-6733","svc":"Statewide DD services & MUI/abuse reporting","access":"All","panel":"G","flag":"idd"},{"county":"National","cat":"IDD","name":"The Arc of Ohio","phone":"1-800-875-2723","svc":"Advocacy & support for people with IDD & families","access":"All","panel":"G","flag":"idd"},{"county":"National","cat":"Serious illness","name":"CancerCare","phone":"1-800-813-4673","svc":"Free counseling, support groups & financial help","access":"Serious illness","panel":"G","flag":"seriousMed"},{"county":"National","cat":"Caregiver","name":"NAMI HelpLine","phone":"1-800-950-6264","svc":"Information & support for mental illness (M-F); text 62640","access":"All","panel":"G","flag":"seriousMed"},{"county":"Columbus (Franklin)","cat":"Geriatric","name":"Central Ohio Area Agency on Aging","phone":"1-800-589-7277","svc":"In-home care, benefits & caregiver support for older adults","access":"Age 60+","national":1,"panel":"G","flag":"geriatric"},{"county":"Cleveland (Cuyahoga)","cat":"Geriatric","name":"Western Reserve Area Agency on Aging","phone":"1-216-621-0303","svc":"In-home care, benefits & caregiver support for older adults","access":"Age 60+","national":1,"panel":"G","flag":"geriatric"},{"county":"National","cat":"Geriatric","name":"Eldercare Locator","phone":"1-800-677-1116","svc":"National referral to local aging services","access":"Age 60+","panel":"G","flag":"geriatric"},{"county":"National","cat":"Geriatric","name":"Ohio Adult Protective Services (elder abuse)","phone":"1-855-644-6277","svc":"Report suspected abuse/neglect of older adults","access":"Age 60+","panel":"G","flag":"geriatric"},{"county":"Columbus (Franklin)","cat":"IDD","name":"Franklin County Board of Developmental Disabilities","phone":"1-614-475-6440","svc":"Eligibility, service coordination & supports","access":"All","national":1,"panel":"G","flag":"idd"},{"county":"Cleveland (Cuyahoga)","cat":"IDD","name":"Cuyahoga County Board of Developmental Disabilities","phone":"1-216-241-8230","svc":"Eligibility, service coordination & supports","access":"All","national":1,"panel":"G","flag":"idd"},{"county":"Columbus (Franklin)","cat":"Justice","name":"Reeb Avenue Center — reentry & workforce","phone":"1-614-525-2112","svc":"Job training & social services (reentry-friendly)","access":"All","national":1,"panel":"G","flag":"justice"},{"county":"Cleveland (Cuyahoga)","cat":"Justice","name":"Cuyahoga County Reentry — via 211","phone":"211","svc":"Reentry case management, ID, housing & job linkage","access":"Justice-involved","national":1,"panel":"G","flag":"justice"},{"county":"National","cat":"Justice","name":"Ohio Justice & Policy Center","phone":"1-513-421-1108","svc":"Legal help & reentry advocacy","access":"Justice-involved","panel":"G","flag":"justice"},{"county":"National","cat":"Interpreter","name":"Patient's Medicaid plan member line / Ohio Medicaid Consumer Hotline","phone":"1-800-324-8680","svc":"Free spoken + ASL interpreters — call the number on the patient's insurance card (TTY 711)","access":"Free to Medicaid members","panel":"I","auto":1},{"county":"National","cat":"Interpreter","name":"988 — language & ASL access","phone":"988","svc":"Press 2 for Spanish; ASL via videophone / 'ASL Now'; 240+ languages","access":"Free · 24/7","panel":"I","auto":1},{"county":"National","cat":"Interpreter","name":"211 — phone interpretation","phone":"211","svc":"Built-in telephone interpretation for resource referrals","access":"Free · 24/7","panel":"I","auto":1},{"county":"National","cat":"Interpreter","name":"Ohio Relay (Deaf / HoH telephone access)","phone":"711","svc":"Relay for Deaf, DeafBlind, hard-of-hearing & speech-disabled (English 800-750-0750 · Spanish 888-269-0678)","access":"Free · 24/7","panel":"I","auto":1},{"county":"Columbus (Franklin)","cat":"Interpreter","name":"US Together — Interpreter Services","phone":"1-614-581-4357","svc":"74 languages; phone & in-person for medical, legal & social settings","access":"Requesting agency billed (free to patient)","national":1,"panel":"I"},{"county":"Columbus (Franklin)","cat":"Interpreter","name":"Asian American Community Services","phone":"1-614-220-4023","svc":"30+ Asian languages incl. Nepali; 24/7 phone & in-person","access":"Requesting agency billed","national":1,"panel":"I"},{"county":"Columbus (Franklin)","cat":"Interpreter","name":"CRIS — Community Refugee & Immigration Services","phone":"1-614-235-5747","svc":"Interpretation & case management in dozens of languages","access":"Free / low-cost","national":1,"panel":"I"},{"county":"Columbus (Franklin)","cat":"Interpreter","name":"Ethiopian Tewahedo Social Services (ETSS)","phone":"1-614-252-5362","svc":"Translation & navigators (Kiswahili, Lingala, Kirundi, French, etc.)","access":"Free / low-cost","national":1,"panel":"I"},{"county":"Columbus (Franklin)","cat":"Interpreter","name":"Somali Community Association of Ohio","phone":"1-614-262-4068","svc":"Somali interpretation & translation","access":"Free / low-cost","national":1,"panel":"I"},{"county":"Columbus (Franklin)","cat":"Interpreter","name":"Bhutanese Community of Central Ohio","phone":"1-614-396-8965","svc":"Nepali / Bhutanese interpretation & health navigation","access":"Free","national":1,"panel":"I"},{"county":"Columbus (Franklin)","cat":"Interpreter","name":"Deaf Services Center — ASL interpreting","phone":"1-614-841-1991","svc":"ASL interpreting (in-person & scheduled); videophone 614-515-6065","access":"Agency billed (free to patient)","national":1,"panel":"I"},{"county":"Cleveland (Cuyahoga)","cat":"Interpreter","name":"US Together — Cleveland (Interpreter Services)","phone":"1-216-456-9630","svc":"270+ interpreters, ~74 languages; in-person, phone & virtual","access":"Requesting agency billed (free to patient)","national":1,"panel":"I"},{"county":"Cleveland (Cuyahoga)","cat":"Interpreter","name":"Asian Services in Action (ASIA, Inc.)","phone":"1-216-881-0330","svc":"Face-to-face, phone & virtual interpreting + document translation","access":"Requesting agency billed","national":1,"panel":"I"},{"county":"Cleveland (Cuyahoga)","cat":"Interpreter","name":"Catholic Charities — Migration & Refugee Services","phone":"1-216-939-3737","svc":"Resettlement/immigration services in many languages","access":"Refugee/immigrant services","national":1,"panel":"I"},{"county":"Cleveland (Cuyahoga)","cat":"Interpreter","name":"Building Hope in the City — Hope Center","phone":"1-216-241-9400","svc":"Walk-in refugee/immigrant center with staff language support","access":"Free center services","national":1,"panel":"I"},{"county":"Cleveland (Cuyahoga)","cat":"Interpreter","name":"Cleveland Hearing & Speech Center — ASL interpreting","phone":"1-216-231-0787","svc":"In-person/video ASL + spoken-language interpreting; after-hours 216-258-3520","access":"Agency billed (free to patient)","national":1,"panel":"I"}];</script>
+<script>
+"use strict";
+if(/[?&]embed/.test(location.search))document.body.classList.add("embed");
+var S={cleared:null,setting:null,zip:"",insurance:null,sab:null,gender:"",lang:"English",interpreter:null,
+ lifeStage:null,flags:{perinatal:0,veteran:0,lgbtq:0,sud:0,tbi:0,idd:0,seriousMed:0,justice:0,unhoused:0},
+ cssrsDone:null,suicideRisk:null,sudScreenDone:null,sudTool:null,sudScore:"",violence:null,
+ dispo:null,intensity:null,residType:null,
+ planDone:null,
+ firearm:null,meds:null,
+ firearmPlan:{safe:0,noaccess:0,removed:0,other:0},firearmOther:"",
+ medsPlan:{safe:0,noaccess:0,removed:0,other:0},medsOther:"",
+ otherMeans:{caustic:0,other:0},otherMeansOther:"",
+ plan2:{fuProvider:"",fuDate:"",fuTime:""},
+ apptScheduled:null,warm:null,callback:null,pcp:null,pharmacy:null,refContact:{phone:0,email:0},
+ social:{housing:0,food:0,transport:0,dv:0,financial:0,childcare:0,legal:0,employment:0},
+ selected:{},touched:{}};
+function $(s,c){return (c||document).querySelector(s);}
+function $$(s,c){return [].slice.call((c||document).querySelectorAll(s));}
+function esc(x){return (x==null?"":(""+x)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function tel(p){return (p||"").replace(/[^0-9]/g,"");}
+function countyFromZip(z){if(/^43[0-2]/.test(z))return "Columbus (Franklin)";if(/^44[01]/.test(z))return "Cleveland (Cuyahoga)";return null;}
+
+/* ---- classify a record into panel/sub/spec/need ---- */
+function specOf(r){var s=((r.name||"")+" "+(r.svc||"")).toLowerCase();
+ if(/psychosis|epicenter|step|first-episode/.test(s))return "fep";
+ if(/perinatal|reproductive|women's|postpartum|maternal/.test(s))return "perinatal";
+ if(/geriatric|older adult/.test(s))return "geriatric";
+ if(/eating/.test(s))return "eating";
+ if(/oncology|cancer|psycho-?onc|psychosocial/.test(s))return "cancer";
+ if(/trauma|star/.test(s))return "trauma";
+ if(/child|adolescent|youth|buckeye ranch|applewood|bellefaire|pediatric/.test(s))return "pediatric";
+ return "other";}
+function metaOf(r){
+ if(r.panel)return r; // national pre-tagged
+ var c=r.cat,m={};
+ if(c==="Outpatient psychiatry"){m.panel="A";m.sub="Psychiatrist / PMHNP (medication management)";}
+ else if(c==="Therapy & counseling"){m.panel="A";m.sub="Therapy / counseling (LCSW, LPC, psychology, peer)";}
+ else if(c==="IOP / PHP"){m.panel="A";m.sub="IOP / PHP programs";}
+ else if(c==="Specialty psychiatry"){m.panel="G";m.spec=specOf(r);}
+ else if(c==="Substance use & recovery"){m.panel="C";}
+ else if(c==="Crisis & psych urgent care"){m.panel="D";}
+ else if(c==="Health & medical"){m.panel="B";}
+ else if(c==="Shelter & housing"){m.panel="F";m.need="housing";}
+ else if(c==="Food"){m.panel="F";m.need="food";}
+ else if(c==="Domestic violence & assault"){m.panel="F";m.need="dv";}
+ else if(c==="Benefits & financial"){m.panel="F";m.need="financial";}
+ else if(c==="Employment & re-entry"){m.panel="F";m.need="employment";}
+ else if(c==="Legal, ID & records"){m.panel="F";m.need="legal";}
+ else if(c==="Veterans"){m.panel="G";m.spec="veteran";}
+ else {m.panel="F";m.need="other";}
+ return Object.assign({},r,m);
+}
+var ALL=DATA.map(metaOf).concat(NATIONAL.map(function(r){return Object.assign({national:1},metaOf(r));}));
+function rid(r){return (r.county||"")+"|"+r.name+"|"+r.phone;}
+function countyOK(r){var c=countyFromZip(S.zip);
+ if(r.national){ if(r.county&&/Columbus|Cleveland/.test(r.county)){return !c||r.county===c;} return true; }
+ if(!c)return true;return r.county===c;}
+
+/* ---- generic option/flag wiring ---- */
+document.addEventListener("click",function(e){
+ var opt=e.target.closest(".opt");if(!opt)return;
+ if(opt.dataset.val!==undefined && opt.parentElement.dataset.field){
+  var f=opt.parentElement.dataset.field, v=opt.dataset.val;
+  setField(f,v);
+  $$(".opt",opt.parentElement).forEach(function(o){o.classList.toggle("sel",o===opt);
+   o.classList.toggle("danger",o===opt&&o.classList.contains("dangerv"));
+   o.classList.toggle("warn",o===opt&&o.classList.contains("warnv"));});
+  render();
+ } else if(opt.dataset.flag!==undefined){
+  var fl=opt.dataset.flag;S.flags[fl]=S.flags[fl]?0:1;opt.classList.toggle("sel",!!S.flags[fl]);render();
+ } else if(opt.dataset.mc!==undefined){
+  var mc=opt.dataset.mc;S.refContact[mc]=S.refContact[mc]?0:1;opt.classList.toggle("sel",!!S.refContact[mc]);
+ }
+});
+function setField(f,v){
+ if(f in S){S[f]=v;}
+ if(f==="cssrsDone"&&v==="no"){S.suicideRisk=null;}
+ if(f==="sudScreenDone"&&v==="no"){S.sudTool=null;S.sudScore="";}
+}
+function setPath(p,val){var a=p.split(".");S[a[0]][a[1]]=val?1:0;}
+$("#zip").addEventListener("input",function(e){S.zip=e.target.value.replace(/[^0-9]/g,"").slice(0,5);e.target.value=S.zip;render();});
+["gender","lang"].forEach(function(id){var el=$("#"+id);if(el)el.addEventListener("input",function(){S[id]=el.value;render();});});
+$("#sudScore").addEventListener("input",function(e){S.sudScore=e.target.value;render();});
+document.addEventListener("input",function(e){
+ var p2=e.target.dataset.plan2,tx=e.target.dataset.text;
+ if(p2){S.plan2[p2]=e.target.value;render();}
+ if(tx){S[tx]=e.target.value;}
+});
+
+/* ---- SUD positivity ---- */
+function sudPositive(){if(S.sudScreenDone!=="yes")return false;var n=parseFloat(S.sudScore);
+ if(S.sudTool==="clinical")return true;
+ if(isNaN(n))return false;
+ if(S.sudTool==="auditc")return n>=3; if(S.sudTool==="dast10")return n>=3; if(S.sudTool==="taps")return n>=1; return false;}
+
+/* ---- completion ---- */
+function L0ok(){return S.cleared==="yes"&&S.setting&&S.zip.length===5&&S.insurance;}
+function L1ok(){return !!S.lifeStage;}
+function L2ok(){var a=S.cssrsDone&&(S.cssrsDone==="no"||S.suicideRisk);
+ var b=S.sudScreenDone&&(S.sudScreenDone==="no"||(S.sudTool&&(S.sudTool==="clinical"||S.sudScore!=="")));
+ return a&&b&&S.violence;}
+function L3ok(){if(!S.dispo)return false;if(S.dispo==="community")return !!S.intensity;if(S.dispo==="residential")return !!S.residType;return false;}
+function planFilled(){return S.planDone!=null;}
+function hiRisk(){return S.suicideRisk==="moderate"||S.suicideRisk==="high";}
+function L4ok(){
+ var planReq=planFilled();
+ var means=S.firearm!=null&&S.meds!=null;
+ var fu=S.apptScheduled!=null;
+ return planReq&&means&&fu;
+}
+function selectedCount(){return Object.keys(S.selected).filter(function(k){return S.selected[k];}).length;}
+function L6ok(){return L2ok()&&L4ok()&&selectedCount()>=1;}
+
+/* ---- render visibility + reveals ---- */
+function show(id,on){$(id).classList.toggle("hidden",!on);}
+function rev(id,on){$(id).classList.toggle("hidden",!on);}
+function render(){
+ rev("#notCleared",S.cleared==="no");
+ $("#zipMeta").textContent=S.zip.length===5?(countyFromZip(S.zip)?("→ "+countyFromZip(S.zip)):"→ outside Columbus/Cleveland — showing both + national"):"";
+ show("#L1",L0ok());
+ // L2 reveals
+ rev("#cssrsRisk",S.cssrsDone==="yes");
+ rev("#hiRiskMsg",hiRisk());
+ rev("#sudTools",S.sudScreenDone==="yes");
+ rev("#sudScoreWrap",S.sudScreenDone==="yes"&&S.sudTool&&S.sudTool!=="clinical");
+ var hint={auditc:"(positive ≥4 men / ≥3 women)",dast10:"(positive ≥3)",taps:"(positive ≥1)"}[S.sudTool]||"";
+ $("#sudPosHint").textContent=hint;
+ rev("#sudPosMsg",sudPositive());
+ rev("#violenceMsg",S.violence==="yes");
+ show("#L2",L0ok()&&L1ok());
+ // L3
+ show("#L3",L0ok()&&L1ok()&&L2ok());
+ rev("#intensityWrap",S.dispo==="community");
+ rev("#residWrap",S.dispo==="residential");
+ // L4
+ show("#L4",L3ok());
+ rev("#firearmPlanWrap",S.firearm==="yes");
+ rev("#medsPlanWrap",S.meds==="yes");
+ rev("#apptYesWrap",S.apptScheduled==="yes");
+ rev("#apptNoWrap",S.apptScheduled==="no");
+ // L5
+ show("#L5",L3ok());
+ if(L3ok())renderPanels();
+ // L6
+ show("#L6",L3ok());
+ renderL6status();
+ renderStatus();
+}
+
+/* ---- resource card ---- */
+function resCard(r){
+ var id=rid(r),ck=S.selected[id]?"checked":"";
+ var badge=r.national?'<span class="badge nat">national</span>':'<span class="badge v">✓ verified</span>';
+ return '<label class="res"><input type="checkbox" data-res="'+esc(id)+'" '+ck+'>'+
+  '<div><div class="rn">'+esc(r.name)+badge+'</div>'+
+  (r.svc?'<div class="rs">'+esc(r.svc)+'</div>':'')+
+  (r.access?'<div class="rax">'+esc(r.access)+'</div>':'')+
+  (r.address?'<div class="rad">📍 '+esc(r.address)+'</div>':'')+
+  '<a class="rp" href="tel:'+tel(r.phone)+'">📞 '+esc(r.phone)+'</a> <span class="rad">· '+esc(r.county)+'</span>'+
+  '</div></label>';
+}
+function pedsOK(r){return !r.peds||S.lifeStage==="child";}
+function pick(filterFn){return ALL.filter(function(r){return countyOK(r)&&pedsOK(r)&&filterFn(r);});}
+function subSection(title,list){if(!list.length)return "";return (title?'<div class="subhdr">'+esc(title)+'</div>':'')+list.map(resCard).join("");}
+
+function activeFlag(f){if(f==="veteran")return !!(S.flags.veteran||S.insurance==="VA");if(f==="pediatric")return S.lifeStage==="child";if(f==="geriatric")return S.lifeStage==="geriatric";return !!S.flags[f];}
+function isFoodBank(r){return r.cat==="Food"&&/food bank|food collective/i.test(r.name);}
+function autoMatch(r){var nm=r.name;
+ if(r.auto)return true;
+ if(nm==="211 — United Way"||/^988 /.test(nm)||nm==="911 — Emergency"||nm==="Crisis Text Line"||nm==="Trans Lifeline"||nm==="Ohio Medicaid Consumer Hotline"||isFoodBank(r))return true;
+ if(S.insurance==="Medicaid"&&(nm==="Ohio Medicaid Consumer Hotline"||/Non-Emergency Transportation/.test(nm)))return true;
+ if(r.national&&r.flag&&activeFlag(r.flag))return true;
+ if((S.flags.sud||sudPositive())&&r.panel==="C"&&r.national)return true;
+ return false;}
+function miniHTML(){return '<div class="mini">'+[["housing","Housing concern"],["food","Food concern"],["transport","Transportation concern"],["dv","Safety concern (DV)"],["financial","Financial / benefits concern"],["childcare","Childcare concern"],["legal","Legal concern"],["employment","Employment concern"]].map(function(p){return '<label><input type="checkbox" data-social="'+p[0]+'" '+(S.social[p[0]]?"checked":"")+'> '+p[1]+'</label>';}).join("")+'</div>';}
+function renderPanels(){
+ var c=countyFromZip(S.zip);
+ $("#l5ctx").textContent="ZIP "+S.zip+(c?" · "+c:" · both metros")+" · "+S.insurance+" insurance · "+(S.dispo==="community"?("community / "+(S.intensity||"").toUpperCase()):"residential / "+(S.residType||""));
+ var P=[];
+ var aSubs=[{title:"Psychiatrist / PMHNP (medication management)",list:pick(function(r){return r.panel==="A"&&/Psychiatrist/.test(r.sub||"");})},
+  {title:"Therapy / counseling (LCSW, LPC, psychology, peer)",list:pick(function(r){return r.panel==="A"&&/Therapy/.test(r.sub||"");})}];
+ if(S.intensity==="iop"||S.intensity==="php"||S.dispo==="residential")aSubs.push({title:"IOP / PHP programs",list:pick(function(r){return r.panel==="A"&&/IOP/.test(r.sub||"");})});
+ P.push({title:"Panel A · Mental health treatment",subs:aSubs});
+ P.push({title:"Panel B · Primary care & integrated BH",subs:[{title:"",list:pick(function(r){return r.panel==="B";})}]});
+ if(S.flags.sud||sudPositive()){
+  var cAll=pick(function(r){return r.panel==="C";});
+  P.push({title:"Panel C · Substance use treatment",subs:[
+   {title:"Acute detox / withdrawal management",list:cAll.filter(function(r){return r.sub==="detox";})},
+   {title:"Outpatient, MOUD, harm reduction & mutual aid",list:cAll.filter(function(r){return r.sub!=="detox";})}]});
+ }
+ P.push({title:"Panel D · Crisis services",subs:[{title:"",list:pick(function(r){return r.panel==="D";})}]});
+ var alwaysList=pick(function(r){return r.panel==="F"&&(r.need==="catchall"||r.name==="Ohio Medicaid Consumer Hotline"||isFoodBank(r)||(S.insurance==="Medicaid"&&/Non-Emergency Transportation/.test(r.name)));});
+ var alwaysIds={};alwaysList.forEach(function(r){alwaysIds[rid(r)]=1;});
+ var fSubs=[];
+ Object.keys(S.social).forEach(function(k){if(S.social[k]){fSubs.push({title:k.charAt(0).toUpperCase()+k.slice(1),list:pick(function(r){return r.panel==="F"&&r.need===k;}).filter(function(r){return !alwaysIds[rid(r)];})});}});
+ fSubs.push({title:"Always included",list:alwaysList});
+ P.push({title:"Panel F · Social needs",subs:fSubs,mini:true});
+ if(S.interpreter==="yes"){
+  P.push({title:"Panel I · Interpreter / language access",subs:[
+   {title:"Always available (free, any language)",list:pick(function(r){return r.panel==="I"&&r.auto;})},
+   {title:"Local in-person & community",list:pick(function(r){return r.panel==="I"&&!r.auto;})}]});
+ }
+ var gSubs=[];
+ function gpush(title,fn){var list=pick(fn);if(list.length)gSubs.push({title:title,list:list});}
+ if(S.lifeStage==="child")gpush("G1 · Pediatric",function(r){return r.spec==="pediatric"||r.flag==="pediatric";});
+ if(S.lifeStage==="geriatric")gpush("G2 · Geriatric",function(r){return r.spec==="geriatric"||r.flag==="geriatric";});
+ if(S.flags.perinatal)gpush("G3 · Perinatal",function(r){return r.spec==="perinatal"||r.flag==="perinatal";});
+ if(S.flags.veteran||S.insurance==="VA")gpush("G4 · Veteran",function(r){return r.spec==="veteran"||r.flag==="veteran";});
+ if(S.flags.lgbtq)gpush("G5 · LGBTQ+",function(r){return r.flag==="lgbtq";});
+ if(S.flags.tbi)gpush("G6 · TBI / neuropsychiatric",function(r){return r.flag==="tbi";});
+ if(S.flags.idd)gpush("G7 · IDD",function(r){return r.flag==="idd";});
+ if(S.flags.seriousMed)gpush("G8 · Serious medical illness (psycho-oncology, palliative)",function(r){return r.flag==="seriousMed"||r.spec==="cancer"||r.spec==="eating";});
+ if(S.flags.justice||S.violence==="yes")gpush("G9 · Justice-involved / forensic",function(r){return r.flag==="justice";});
+ if(gSubs.length)P.push({title:"Panel G · Population-specific",subs:gSubs});
+ // compute auto-checks then apply to any resource the user hasn't manually toggled
+ var auto={};
+ P.forEach(function(p){p.subs.forEach(function(sub){if(sub.list.length===1)auto[rid(sub.list[0])]=1;sub.list.forEach(function(r){if(autoMatch(r))auto[rid(r)]=1;});});});
+ P.forEach(function(p){p.subs.forEach(function(sub){sub.list.forEach(function(r){var id=rid(r);if(!(id in S.touched)){S.selected[id]=auto[id]?true:(S.selected[id]||false);}});});});
+ var out="";
+ P.forEach(function(p){var body=p.mini?miniHTML():"";p.subs.forEach(function(sub){body+=subSection(sub.title,sub.list);});out+=panelHTML("",p.title,body);});
+ $("#panels").innerHTML=out;
+}
+function panelHTML(k,title,body){if(!body||!body.trim())body='<div class="note" style="padding:8px 2px">No verified local match — use 211, your insurer\'s provider directory, or a warm referral.</div>';
+ return '<div class="panel"><div class="ph">'+esc(title)+'</div><div class="pbody">'+body+'</div></div>';}
+
+/* resource + social checkbox handlers */
+document.addEventListener("change",function(e){
+ if(e.target.dataset.res!==undefined){var id=e.target.dataset.res;S.selected[id]=e.target.checked;S.touched[id]=1;renderL6status();renderStatus();}
+ if(e.target.dataset.social!==undefined){S.social[e.target.dataset.social]=e.target.checked?1:0;renderPanels();}
+ if(e.target.dataset.store!==undefined){setPath(e.target.dataset.store,e.target.checked);}
+});
+
+/* ---- status bar ---- */
+function chk(ok,label){return '<span class="chk '+(ok?"ok":"")+'">'+(ok?"✓":"○")+' <b>'+label+'</b></span>';}
+function renderStatus(){
+ $("#statusInner").innerHTML=chk(L0ok(),"Gate")+chk(L1ok(),"Patient")+chk(L2ok(),"Safety screen")+chk(L3ok(),"Level of care")+chk(L4ok(),"Interventions")+chk(selectedCount()>=1,"Referrals ("+selectedCount()+")")+
+  '<button class="btn" id="jump" '+(L6ok()?"":"disabled")+'>Go to packet ↓</button>';
+ var j=$("#jump");if(j)j.onclick=function(){$("#L6").scrollIntoView({behavior:"smooth"});};
+}
+function renderL6status(){
+ var items=[["Safety screening (L2)",L2ok()],["Safety plan (4A)",planFilled()],["Lethal means (4B)",S.firearm!=null&&S.meds!=null],["Follow-up (4C)",S.apptScheduled!=null],["≥1 referral selected",selectedCount()>=1]];
+ $("#l6status").innerHTML=items.map(function(i){return chk(i[1],i[0]);}).join(" ");
+ $("#printBtn").disabled=!L6ok();
+}
+
+/* ---- packet ---- */
+function selectedRes(){return Object.keys(S.selected).filter(function(k){return S.selected[k];}).map(function(k){return ALL.filter(function(r){return rid(r)===k;})[0];}).filter(Boolean);}
+function refBlock(r){return '<div class="refblock"><div class="rn">'+esc(r.name)+'</div><div class="meta">'+esc(r.cat||r.sub||"")+' · '+esc(r.county)+'</div>'+(r.address?'<div class="meta">'+esc(r.address)+'</div>':'')+(r.access?'<div class="meta">'+esc(r.access)+'</div>':'')+'<div><a href="tel:'+tel(r.phone)+'">'+esc(r.phone)+'</a></div></div>';}
+function buildPacket(){
+ var res=selectedRes();
+ var crisis=res.filter(function(r){return r.panel==="D";});
+ var others=res.filter(function(r){return r.panel!=="D";});
+ var c=countyFromZip(S.zip);
+ var loc=S.dispo==="community"?("Community / "+(S.intensity||"").toUpperCase()):("Residential / "+(S.residType||""));
+ var planDoneTxt=S.planDone==="yes"?"✓ Completed":S.planDone==="no"?"Not completed":'<span class="blank"></span>';
+ function meansList(obj,otherText,labels){var parts=[];for(var k in labels){if(obj[k])parts.push(labels[k]);}if(obj.other&&otherText)parts.push("Other: "+otherText);return parts.join("; ");}
+ var lmLabels={safe:"Locked in safe",noaccess:"Patient unable to access",removed:"Removed via collateral assistance"};
+ var fwText=meansList(S.firearmPlan,S.firearmOther,lmLabels);
+ var mdText=meansList(S.medsPlan,S.medsOther,lmLabels);
+ var omText=meansList(S.otherMeans,S.otherMeansOther,{caustic:"Removal of caustic liquids"});
+ var fuLines=S.apptScheduled==="yes"
+  ? '<li>Scheduled: <b>Yes</b></li><li>Provider: '+(esc(S.plan2.fuProvider)||'<span class="blank"></span>')+' · Date: '+(esc(S.plan2.fuDate)||'<span class="blank"></span>')+' · Time: '+(esc(S.plan2.fuTime)||'<span class="blank"></span>')+'</li><li>Warm handoff: <b>'+esc(S.warm||"—")+'</b></li>'
+  : S.apptScheduled==="no"
+  ? '<li>Scheduled: <b>No</b> — referral to be completed by: <b>'+([S.refContact.phone?"telephone call":"",S.refContact.email?"email intake":""].filter(Boolean).join(" + ")||"—")+'</b></li>'
+  : '<li>Scheduled: <span class="blank"></span></li>';
+ var crisisTable=[["Suicide & Crisis Lifeline","Call or text 988","988"],["Crisis Text Line","Text HOME to 741741","741741"],["Veterans Crisis Line","Call 988, then press 1","988"],["Trans Lifeline","877-565-8860","8775658860"],["SAMHSA Helpline","1-800-662-4357","18006624357"],["Your local crisis team","BLANK",""],["Nearest emergency room","BLANK",""]].map(function(x){return '<tr><td>'+esc(x[0])+'</td><td>'+(x[1]==="BLANK"?'<span class="blank"></span>':(x[2]?'<a href="tel:'+x[2]+'">'+esc(x[1])+'</a>':esc(x[1])))+'</td></tr>';}).join("");
+ var pinned=crisis.length?crisis.map(refBlock).join(""):'<div class="meta note">Add a Panel D crisis resource for a local pinned line.</div>';
+ var html='<div class="pk">'+
+  '<h2>Discharge plan</h2><div class="pkmeta">'+esc(loc)+' · ZIP '+esc(S.zip)+(c?" · "+esc(c):"")+' · '+esc(S.insurance)+' · Language: '+esc(S.lang)+(S.interpreter==="yes"?" (interpreter needed)":"")+'</div>'+
+  '<h3>Crisis resource card</h3><table>'+crisisTable+'</table>'+
+  (pinned?'<div style="margin-top:8px">'+pinned+'</div>':'')+
+  '<h3>Safety plan</h3><p style="font-size:13px;margin:2px 0">Stanley-Brown safety plan: <b>'+planDoneTxt+'</b></p>'+
+  '<h3>Lethal means</h3><ul>'+
+    '<li>Firearms access: <b>'+esc(S.firearm||"—")+'</b>'+(fwText?' — '+esc(fwText):'')+'</li>'+
+    '<li>Medication stockpile: <b>'+esc(S.meds||"—")+'</b>'+(mdText?' — '+esc(mdText):'')+'</li>'+
+    (omText?'<li>Other means: '+esc(omText)+'</li>':'')+'</ul>'+
+  '<h3>Follow-up appointment</h3><ul>'+fuLines+
+    '<li>Post-discharge phone-contact plan: <b>'+esc(S.callback||"—")+'</b> · PCP: <b>'+esc(S.pcp||"—")+'</b> · Pharmacy: <b>'+esc(S.pharmacy||"—")+'</b></li></ul>'+
+  '<h3>Your referrals</h3>'+(others.length?others.map(refBlock).join(""):'<div class="meta note">No non-crisis referrals selected.</div>')+
+  '<h3 class="er3">When to go back to the emergency room</h3><p style="font-size:13px;margin:2px 0 4px"><b>Go to the ER or call 911 if:</b></p><ul>'+
+    ["You are thinking about hurting yourself or ending your life and cannot stay safe","You are hearing voices telling you to hurt yourself or others","You have hurt yourself","You feel out of control","You have used drugs or alcohol and feel unsafe"].map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul>'+
+  '<h3>Taking care of yourself</h3><ul>'+
+    [["Sleep","Same bed/wake time daily; aim for 7–9 hours."],["Move your body","Even a short walk can help your mood."],["Eat regular meals","Breakfast, lunch, and dinner."],["Avoid alcohol & drugs","They worsen symptoms and can be dangerous with medicines."],["Stay connected","Spend time with people who care about you."],["Keep a routine","A daily schedule helps your brain feel stable."]].map(function(x){return '<li><b>'+esc(x[0])+':</b> '+esc(x[1])+'</li>';}).join("")+'</ul>'+
+  '<h3>Help with other needs — call 211 or 211.org</h3><ul>'+["Housing or shelter","Food or groceries","Rides to appointments","Help paying for medicine","Legal help","Job training"].map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul>'+
+  '<h3>Medications & notes from your care team</h3><div class="lines"><div></div><div></div><div></div><div></div></div>'+
+  '<div class="strength">Asking for help is a sign of strength, not weakness. You do not have to go through this alone.</div>'+
+  '</div>';
+ return html;
+}
+function activateView(v,fromHash){
+ v=(v==="ref")?"ref":"tool";
+ $$(".tab").forEach(function(x){x.classList.toggle("on",x.dataset.view===v);});
+ $("#view-tool").classList.toggle("hidden",v!=="tool");
+ $("#view-ref").classList.toggle("hidden",v!=="ref");
+ var sb=$(".statusbar");if(sb)sb.style.display=v==="tool"?"":"none";
+ if(v==="ref"){$("#heroTitle").innerHTML="Psych<i>Ref</i>";$("#heroKicker").textContent="High-yield clinical reference · evidence-based";}
+ else{$("#heroTitle").innerHTML="Psych<i>Dispo</i>";$("#heroKicker").textContent="Psychiatric disposition & discharge · Columbus + Cleveland";}
+ var want="#"+(v==="ref"?"ref":"plan");
+ if(!fromHash&&location.hash.toLowerCase()!==want){try{history.replaceState(null,"",want);}catch(e){}}
+}
+function viewFromHash(){var h=(location.hash||"").toLowerCase().replace("#","");
+ if(h==="ref"||h==="review"||h==="psychref"||h==="reference")return "ref";
+ if(h==="plan"||h==="tool"||h==="psychdispo"||h==="dispo")return "tool";return null;}
+$$(".tab").forEach(function(t){t.addEventListener("click",function(){activateView(t.dataset.view);window.scrollTo(0,0);});});
+window.addEventListener("hashchange",function(){var v=viewFromHash();if(v)activateView(v,true);});
+(function(){var v=viewFromHash();if(v)activateView(v,true);})();
+$("#genBtn").addEventListener("click",function(){$("#packet").innerHTML=buildPacket();$("#packet").classList.add("show");$("#packet").scrollIntoView({behavior:"smooth"});});
+$("#printBtn").addEventListener("click",function(){if($("#printBtn").disabled)return;$("#packet").innerHTML=buildPacket();$("#packet").classList.add("show");setTimeout(function(){window.print();},120);});
+
+render();
+</script>
+</body></html>
